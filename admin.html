@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - LATENUTA SAN NICOLA</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background: #F5F2E8; }
+        .admin-container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .admin-container h1 { color: #2E5A3B; margin-bottom: 20px; text-align: center; }
+        .login-box { background: white; padding: 30px; border-radius: 15px; max-width: 300px; margin: 80px auto; text-align: center; }
+        .login-box input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #C9A87C; font-size: 1rem; }
+        .login-box button { width: 100%; padding: 12px; background: #2E5A3B; color: white; border: none; border-radius: 10px; font-size: 1rem; cursor: pointer; }
+        .login-error { color: #D95A2B; margin-top: 10px; display: none; }
+        .menu-type-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .menu-type-tabs button { flex: 1; padding: 10px; border: 2px solid #C9A87C; background: white; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        .menu-type-tabs button.active { background: #C9A87C; color: #2E5A3B; }
+        .category-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; }
+        .category-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .category-header h3 { color: #2E5A3B; }
+        .cat-actions button { padding: 4px 10px; border: none; border-radius: 5px; cursor: pointer; font-size: 0.75rem; margin-left: 4px; }
+        .item-row { display: flex; align-items: center; gap: 8px; padding: 8px; margin: 4px 0; border-radius: 8px; background: #F9F7F2; flex-wrap: wrap; }
+        .item-row input { padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.85rem; }
+        .item-row .name-input { width: 140px; }
+        .item-row .desc-input { width: 160px; }
+        .item-row .price-input { width: 55px; }
+        .item-row .emoji-input { width: 40px; text-align: center; }
+        .item-row .type-select { padding: 4px; border-radius: 4px; border: 1px solid #ddd; font-size: 0.85rem; }
+        .item-row .btn-del { background: #D95A2B; color: white; border: none; border-radius: 4px; cursor: pointer; padding: 4px 8px; font-size: 0.8rem; }
+        .add-item-form { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
+        .add-item-form input, .add-item-form select { padding: 6px; border: 1px solid #C9A87C; border-radius: 5px; font-size: 0.85rem; }
+        .add-item-form .btn-add { background: #2E5A3B; color: white; border: none; border-radius: 5px; cursor: pointer; padding: 6px 12px; font-size: 0.85rem; }
+        .btn-new-cat { background: #C9A87C; border: none; padding: 8px 16px; border-radius: 10px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .btn-save { display: block; width: 100%; padding: 14px; background: #2E5A3B; color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin: 20px 0; }
+        .btn-save:disabled { background: #ccc; cursor: not-allowed; }
+        .status-msg { text-align: center; padding: 10px; border-radius: 8px; margin: 10px 0; display: none; }
+        .status-msg.ok { background: #4CAF50; color: white; display: block; }
+        .status-msg.err { background: #D95A2B; color: white; display: block; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .admin-header a { color: #999; text-decoration: none; font-size: 0.9rem; }
+        .rename-cat-input { border: 1px solid #C9A87C; border-radius: 4px; padding: 4px 8px; font-size: 0.9rem; width: 160px; }
+        .logout-link { color: #D95A2B; cursor: pointer; text-decoration: none; font-size: 0.9rem; }
+        @media (max-width: 600px) {
+            .item-row input, .item-row .name-input, .item-row .desc-input { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div id="loginScreen">
+            <h1>&#9881; Pannello Admin</h1>
+            <div class="login-box">
+                <h3>Accesso Amministratore</h3>
+                <input type="password" id="adminPassword" placeholder="Password admin">
+                <button onclick="adminLogin()">Accedi</button>
+                <div class="login-error" id="loginError">Password errata</div>
+                <p style="margin-top:15px;font-size:0.8rem;color:#999;"><a href="index.html" style="color:#999;">&larr; Torna all'app</a></p>
+            </div>
+        </div>
+
+        <div id="adminPanel" style="display:none;">
+            <div class="admin-header">
+                <h1>&#9881; Gestione Menu</h1>
+                <span><a class="logout-link" onclick="adminLogout()">Esci</a> &nbsp; <a href="index.html">&#127968;</a></span>
+            </div>
+
+            <div class="menu-type-tabs">
+                <button id="tabRistorante" class="active" onclick="switchMenuType('ristorante')">&#127857; Ristorante</button>
+                <button id="tabBar" onclick="switchMenuType('bar')">&#127865; Bar</button>
+                <button id="tabOrari" onclick="switchMenuType('orari')">&#128197; Orari</button>
+            </div>
+
+            <div id="statusMsg" class="status-msg"></div>
+
+            <div id="categoriesContainer"></div>
+
+            <div id="orariContainer" style="display:none;"></div>
+
+            <button class="btn-new-cat" id="btnNewCat" onclick="addCategory()">+ Nuova Categoria</button>
+
+            <button class="btn-save" id="btnSave" onclick="saveMenu()">&#128190; SALVA MODIFICHE</button>
+        </div>
+    </div>
+
+    <script>
+        let adminToken = null;
+        let currentMenuType = 'ristorante';
+        let menuBackup = null;
+        let menuData = null;
+
+        async function api(url, opts = {}) {
+            const headers = { 'Content-Type': 'application/json' };
+            if (adminToken) headers['Authorization'] = 'Bearer ' + adminToken;
+            const res = await fetch(url, { ...opts, headers });
+            return res.json();
+        }
+
+        async function adminLogin() {
+            const pw = document.getElementById('adminPassword').value;
+            const result = await api('/api/menu/login', {
+                method: 'POST',
+                body: JSON.stringify({ password: pw })
+            });
+            if (result.success) {
+                adminToken = result.token;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                await loadMenu();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        function adminLogout() {
+            adminToken = null;
+            document.getElementById('loginScreen').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('loginError').style.display = 'none';
+        }
+
+        async function loadMenu() {
+            const data = await api('/api/menu');
+            if (data && data.ristorante) {
+                menuData = JSON.parse(JSON.stringify(data));
+                menuBackup = JSON.parse(JSON.stringify(data));
+                renderCategory();
+            }
+        }
+
+        function switchMenuType(type) {
+            currentMenuType = type;
+            document.querySelectorAll('.menu-type-tabs button').forEach(b => b.classList.remove('active'));
+            const tabId = type === 'ristorante' ? 'tabRistorante' : type === 'bar' ? 'tabBar' : 'tabOrari';
+            document.getElementById(tabId).classList.add('active');
+
+            document.getElementById('categoriesContainer').style.display = (type === 'orari') ? 'none' : 'block';
+            document.getElementById('btnNewCat').style.display = (type === 'orari') ? 'none' : 'block';
+            document.getElementById('orariContainer').style.display = (type === 'orari') ? 'block' : 'none';
+
+            if (type === 'orari') renderOrari();
+            else renderCategory();
+        }
+
+        function renderCategory() {
+            const container = document.getElementById('categoriesContainer');
+            const categories = menuData[currentMenuType];
+            if (!categories) return;
+
+            let html = '';
+            for (const [catName, items] of Object.entries(categories)) {
+                html += `
+                    <div class="category-card" data-category="${catName.replace(/"/g, '&quot;')}">
+                        <div class="category-header">
+                            <div>
+                                <input class="rename-cat-input" value="${catName.replace(/"/g, '&quot;')}" onchange="renameCategory('${catName.replace(/'/g, "\\'")}', this.value)" placeholder="Nome categoria">
+                            </div>
+                            <div class="cat-actions">
+                                <button style="background:#D95A2B;color:white;" onclick="deleteCategory('${catName.replace(/'/g, "\\'")}')">&#128465;</button>
+                            </div>
+                        </div>
+                        ${items.map((item, idx) => `
+                            <div class="item-row">
+                                <input class="emoji-input" value="${item.img || ''}" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'img', this.value)">
+                                <input class="name-input" value="${item.name.replace(/"/g, '&quot;')}" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'name', this.value)">
+                                <input class="desc-input" value="${(item.desc || '').replace(/"/g, '&quot;')}" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'desc', this.value)">
+                                <input class="price-input" type="number" step="0.5" value="${item.price}" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'price', parseFloat(this.value) || 0)">
+                                <select class="type-select" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'type', this.value)">
+                                    <option value="cibo" ${item.type === 'cibo' ? 'selected' : ''}>&#127869; Cibo</option>
+                                    <option value="bevanda" ${item.type === 'bevanda' ? 'selected' : ''}>&#127866; Bevanda</option>
+                                </select>
+                                <button class="btn-del" onclick="deleteItem('${catName.replace(/'/g, "\\'")}', ${idx})">&#10005;</button>
+                            </div>
+                        `).join('')}
+                        <div class="add-item-form">
+                            <input class="emoji-input" placeholder="emoji" id="newEmoji_${catName.replace(/[^a-z]/gi,'')}">
+                            <input placeholder="Nome" id="newName_${catName.replace(/[^a-z]/gi,'')}">
+                            <input placeholder="Descrizione" id="newDesc_${catName.replace(/[^a-z]/gi,'')}">
+                            <input type="number" step="0.5" placeholder="Prezzo" id="newPrice_${catName.replace(/[^a-z]/gi,'')}">
+                            <select id="newType_${catName.replace(/[^a-z]/gi,'')}">
+                                <option value="cibo">Cibo</option>
+                                <option value="bevanda">Bevanda</option>
+                            </select>
+                            <button class="btn-add" onclick="addItem('${catName.replace(/'/g, "\\'")}')">+</button>
+                        </div>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        function editItem(catName, idx, field, value) {
+            if (menuData[currentMenuType][catName]) {
+                menuData[currentMenuType][catName][idx][field] = value;
+            }
+        }
+
+        function deleteItem(catName, idx) {
+            if (confirm('Eliminare questo elemento?')) {
+                menuData[currentMenuType][catName].splice(idx, 1);
+                renderCategory();
+            }
+        }
+
+        function addItem(catName) {
+            const safe = catName.replace(/[^a-z]/gi,'');
+            const emoji = document.getElementById('newEmoji_' + safe).value || '&#127869;';
+            const name = document.getElementById('newName_' + safe).value.trim();
+            const desc = document.getElementById('newDesc_' + safe).value.trim();
+            const price = parseFloat(document.getElementById('newPrice_' + safe).value) || 0;
+
+            if (!name) { alert('Inserisci un nome'); return; }
+
+            const typeSelect = document.getElementById('newType_' + safe);
+            const type = typeSelect ? typeSelect.value : 'cibo';
+
+            menuData[currentMenuType][catName].push({ name, desc, price, type, img: emoji });
+
+            document.getElementById('newEmoji_' + safe).value = '';
+            document.getElementById('newName_' + safe).value = '';
+            document.getElementById('newDesc_' + safe).value = '';
+            document.getElementById('newPrice_' + safe).value = '';
+
+            renderCategory();
+        }
+
+        function addCategory() {
+            const name = prompt('Nome nuova categoria:');
+            if (name && name.trim()) {
+                menuData[currentMenuType][name.trim()] = [];
+                renderCategory();
+            }
+        }
+
+        function renameCategory(oldName, newName) {
+            const trimmed = newName.trim();
+            if (!trimmed || trimmed === oldName) return;
+            const categories = menuData[currentMenuType];
+            if (categories[trimmed] !== undefined && trimmed !== oldName) {
+                alert('Categoria già esistente');
+                renderCategory();
+                return;
+            }
+            categories[trimmed] = categories[oldName];
+            if (trimmed !== oldName) delete categories[oldName];
+            renderCategory();
+        }
+
+        function deleteCategory(catName) {
+            if (confirm('Eliminare la categoria "' + catName + '" e tutti i suoi elementi?')) {
+                delete menuData[currentMenuType][catName];
+                renderCategory();
+            }
+        }
+
+        function renderOrari() {
+            const container = document.getElementById('orariContainer');
+            if (!menuData.config) menuData.config = { openingHours: { ristorante: [{start:'12:00',end:'14:30'}], bar: [{start:'07:00',end:'23:00'}] } };
+            if (!menuData.config.openingHours) menuData.config.openingHours = { ristorante: [{start:'12:00',end:'14:30'}], bar: [{start:'07:00',end:'23:00'}] };
+
+            let html = '<div class="category-card"><h3 style="color:#2E5A3B;margin-bottom:15px;">&#128197; Orari di Apertura</h3>';
+            html += '<p style="font-size:0.85rem;color:#666;margin-bottom:15px;">Fuori da questi orari gli ospiti non possono inviare ordini.</p>';
+
+            ['ristorante', 'bar'].forEach(type => {
+                const label = type === 'ristorante' ? '&#127857; Ristorante' : '&#127865; Bar';
+                const slots = menuData.config.openingHours[type] || [{start:'',end:''}];
+                html += `<div style="margin-bottom:20px;"><h4 style="margin-bottom:8px;">${label}</h4>`;
+                slots.forEach((slot, idx) => {
+                    html += `
+                        <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
+                            <span style="font-size:0.9rem;">Da</span>
+                            <input type="time" value="${slot.start}" onchange="editOrario('${type}', ${idx}, 'start', this.value)" style="padding:6px;border:1px solid #C9A87C;border-radius:5px;">
+                            <span style="font-size:0.9rem;">a</span>
+                            <input type="time" value="${slot.end}" onchange="editOrario('${type}', ${idx}, 'end', this.value)" style="padding:6px;border:1px solid #C9A87C;border-radius:5px;">
+                            ${slots.length > 1 ? `<button onclick='removeOrarioSlot("${type}",${idx})' style="background:#D95A2B;color:white;border:none;border-radius:4px;cursor:pointer;padding:4px 8px;">&times;</button>` : ''}
+                        </div>
+                    `;
+                });
+                html += `<button onclick='addOrarioSlot("${type}")' style="background:#C9A87C;border:none;border-radius:5px;cursor:pointer;padding:6px 12px;font-size:0.85rem;">+ Fascia oraria</button>`;
+                html += '</div>';
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function editOrario(type, idx, field, value) {
+            if (!menuData.config) menuData.config = { openingHours: { ristorante: [], bar: [] } };
+            if (!menuData.config.openingHours) menuData.config.openingHours = { ristorante: [], bar: [] };
+            if (!menuData.config.openingHours[type]) menuData.config.openingHours[type] = [];
+            if (!menuData.config.openingHours[type][idx]) menuData.config.openingHours[type][idx] = { start: '', end: '' };
+            menuData.config.openingHours[type][idx][field] = value;
+        }
+
+        function addOrarioSlot(type) {
+            if (!menuData.config) menuData.config = { openingHours: { ristorante: [], bar: [] } };
+            if (!menuData.config.openingHours[type]) menuData.config.openingHours[type] = [];
+            menuData.config.openingHours[type].push({ start: '12:00', end: '14:00' });
+            renderOrari();
+        }
+
+        function removeOrarioSlot(type, idx) {
+            menuData.config.openingHours[type].splice(idx, 1);
+            renderOrari();
+        }
+
+        async function saveMenu() {
+            const btn = document.getElementById('btnSave');
+            btn.disabled = true;
+            btn.textContent = 'Salvataggio...';
+            const msg = document.getElementById('statusMsg');
+
+            const result = await api('/api/menu', {
+                method: 'PUT',
+                body: JSON.stringify({ menu: menuData })
+            });
+
+            if (result.success) {
+                msg.className = 'status-msg ok';
+                msg.textContent = '&#10003; Menu salvato con successo!';
+                menuBackup = JSON.parse(JSON.stringify(menuData));
+            } else {
+                msg.className = 'status-msg err';
+                msg.textContent = '&#10007; Errore: ' + (result.error || 'salvataggio fallito');
+            }
+
+            btn.disabled = false;
+            btn.textContent = '&#128190; SALVA MODIFICHE';
+
+            setTimeout(() => {
+                msg.className = 'status-msg';
+                msg.textContent = '';
+            }, 3000);
+        }
+
+        document.getElementById('adminPassword').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') adminLogin();
+        });
+    </script>
+</body>
+</html>

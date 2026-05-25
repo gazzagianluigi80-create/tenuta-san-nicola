@@ -1,0 +1,35 @@
+cd C:\Users\HP\Documents\TenutaSanNicola
+node server.js
+
+ Imposta IP statico (es. 192.168.1.100) sul PC
+2. Avvia il server:
+cd C:\Users\HP\Documents\TenutaSanNicola
+node server.js
+3. Apri nel browser: http://192.168.1.100:3000/qrcodes.html
+4. I QR code avranno già l'IP nuovo. Stampa la pagina e plastifica
+Se vuoi usare un IP diverso dalla porta 3000 o un nome tipo tenuta.local, dimmi.   
+
+Bene. Riassunto di tutto quello che hai ora nella cartella C:\Users\HP\Documents\TenutaSanNicola\:
+File
+server.js                     Server backend con API (ordini, menu, login)
+index.html                    App principale: Ospite, Bar, Cucina, Reception
+admin.html                    Pannello per modificare il menù dal browser
+qrcodes.html                  Genera/stampa i QR code per le 15 stanze
+app.js                        Logica completa client
+menu.json                     Menù modificabile dall'admin panel
+orders.json                   Ordini salvati su disco                  
+manifest.json                 Config per installare l'app come PWA
+
+Password:
+- Bar: bar
+- Cucina: cucina
+- Reception: reception
+- Admin panel: admin
+Per avviare: node server.js
+
+http://192.168.1.5:3000              → App principale (Ospite, Bar, Cucina, Reception)
+http://192.168.1.5:3000/admin.html   → Pannello Admin menù
+http://192.168.1.5:3000/qrcodes.html → QR code stanze
+
+Cloud (Railway o Render)
+Carico il progetto su un server cloud professionale. Costa ~5-7€/mese ma ha IP fisso, SSL, e funziona 24/7. Il migliore per una tenuta reale.

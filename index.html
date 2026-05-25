@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#2E5A3B">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="https://via.placeholder.com/192x192/2E5A3B/white?text=TSN">
+    <title>LATENUTA SAN NICOLA</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <h1>&#127795; LATENUTA SAN NICOLA</h1>
+            </div>
+            <div id="roomBadge" class="room-badge"></div>
+            <div id="cartIcon" class="cart-icon" style="display: none;" onclick="showCart()">
+                &#128722; <span id="cartCount">0</span>
+            </div>
+        </header>
+
+        <!-- Schermata selezione ruolo -->
+        <div id="roleScreen" class="screen active">
+            <div style="text-align:right;margin-bottom:10px;">
+                <a href="admin.html" style="color:#2E5A3B;text-decoration:none;font-size:0.9rem;font-weight:bold;">&#9881; Pannello Admin</a>
+            </div>
+            <div class="role-buttons">
+                <button class="role-btn guest-btn" onclick="setRole('guest')">&#127968; OSPITE</button>
+                <button class="role-btn bar-btn" onclick="showPasswordModal('bar')">&#127865; BAR</button>
+                <button class="role-btn kitchen-btn" onclick="showPasswordModal('kitchen')">&#127833; CUCINA</button>
+                <button class="role-btn" style="background:#2E5A3B;color:white;" onclick="showPasswordModal('reception')">&#128179; RECEPTION</button>
+            </div>
+            <div class="demo-rooms">
+                <h3>&#128241; Demo QR Stanze</h3>
+                <div class="room-grid">
+                    <button class="room-demo-btn" onclick="setRoom(1)">Stanza 1</button>
+                    <button class="room-demo-btn" onclick="setRoom(2)">Stanza 2</button>
+                    <button class="room-demo-btn" onclick="setRoom(3)">Stanza 3</button>
+                    <button class="room-demo-btn" onclick="setRoom(4)">Stanza 4</button>
+                    <button class="room-demo-btn" onclick="setRoom(5)">Stanza 5</button>
+                    <button class="room-demo-btn" onclick="setRoom(6)">Stanza 6</button>
+                    <button class="room-demo-btn" onclick="setRoom(7)">Stanza 7</button>
+                    <button class="room-demo-btn" onclick="setRoom(8)">Stanza 8</button>
+                    <button class="room-demo-btn" onclick="setRoom(9)">Stanza 9</button>
+                    <button class="room-demo-btn" onclick="setRoom(10)">Stanza 10</button>
+                    <button class="room-demo-btn" onclick="setRoom(11)">Stanza 11</button>
+                    <button class="room-demo-btn" onclick="setRoom(12)">Stanza 12</button>
+                    <button class="room-demo-btn" onclick="setRoom(13)">Stanza 13</button>
+                    <button class="room-demo-btn" onclick="setRoom(14)">Stanza 14</button>
+                    <button class="room-demo-btn" onclick="setRoom(15)">Stanza 15</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schermata OSPITE -->
+        <div id="guestScreen" class="screen">
+            <div class="guest-header">
+                <span class="room-number"></span>
+                <div>
+                    <button class="history-btn" onclick="backToRoles()" style="background:#D95A2B;color:white;margin-right:8px;">&#128682;</button>
+                    <button class="history-btn" onclick="showHistory()">&#128203; Storico</button>
+                </div>
+            </div>
+            <div class="menu-buttons">
+                <button class="menu-type-btn active" onclick="showMenu('ristorante', this)">&#127857; RISTORANTE</button>
+                <button class="menu-type-btn" onclick="showMenu('bar', this)">&#127865; BAR</button>
+            </div>
+            <div id="menuContainer" class="menu-container"></div>
+        </div>
+
+        <!-- Schermata CARRELLO -->
+        <div id="cartScreen" class="screen">
+            <div class="cart-header">
+                <button class="back-btn" onclick="backToMenu()">&larr; Indietro</button>
+                <h2>&#128722; Carrello</h2>
+            </div>
+            <div id="cartItems" class="cart-items"></div>
+            <div class="cart-total">
+                <strong>Totale: &euro;<span id="cartTotal">0</span></strong>
+            </div>
+            <div class="order-time" id="orderTimeSelector" style="display: none;">
+                <label>Orario desiderato:</label>
+                <select id="orderTime"></select>
+            </div>
+            <button class="submit-order-btn" onclick="submitOrder()">&#128233; INVIA ORDINE</button>
+        </div>
+
+        <!-- Schermata STORICO OSPITE -->
+        <div id="historyScreen" class="screen">
+            <div class="history-header">
+                <button class="back-btn" onclick="backToGuest()">&larr; Indietro</button>
+                <h2>&#128203; Storico Ordini</h2>
+            </div>
+            <div id="historyList" class="history-list"></div>
+        </div>
+
+        <!-- Schermata BAR -->
+        <div id="barScreen" class="screen">
+            <div class="staff-header">
+                <h2>&#127865; BAR - Ordini Attivi</h2>
+                <button class="history-btn" onclick="showStaffHistory('bar')">&#128476; Storico</button>
+                <button class="logout-btn" onclick="logout()">&#128682; Esci</button>
+            </div>
+            <div id="barOrdersList" class="orders-list"></div>
+        </div>
+
+        <!-- Schermata CUCINA -->
+        <div id="kitchenScreen" class="screen">
+            <div class="staff-header">
+                <h2>&#127833; CUCINA - Ordini Attivi</h2>
+                <button class="history-btn" onclick="showStaffHistory('kitchen')">&#128476; Storico</button>
+                <button class="logout-btn" onclick="logout()">&#128682; Esci</button>
+            </div>
+            <div id="kitchenOrdersList" class="orders-list"></div>
+        </div>
+
+        <!-- Schermata RECEPTION -->
+        <div id="receptionScreen" class="screen">
+            <div class="staff-header">
+                <h2>&#128179; RECEPTION - Da Pagare</h2>
+                <button class="history-btn" onclick="showReceptionHistory()">&#128476; Incassati</button>
+                <button class="logout-btn" onclick="logout()">&#128682; Esci</button>
+            </div>
+            <div id="totalIncasso" style="background:#2E5A3B;color:white;padding:12px;border-radius:10px;margin-bottom:15px;font-size:1.1rem;text-align:center;">
+                Totale da incassare: &euro;<span id="totalDaIncassare">0.00</span>
+            </div>
+            <div id="receptionOrdersList" class="orders-list"></div>
+        </div>
+
+        <!-- Schermata STORICO RECEPTION -->
+        <div id="receptionHistoryScreen" class="screen">
+            <div class="history-header">
+                <button class="back-btn" onclick="backToReception()">&larr; Indietro</button>
+                <h2>&#128476; Ordini Pagati</h2>
+            </div>
+            <div id="receptionHistoryList" class="history-list"></div>
+        </div>
+
+        <!-- Schermata STORICO STAFF -->
+        <div id="staffHistoryScreen" class="screen">
+            <div class="history-header">
+                <button class="back-btn" onclick="backToStaff()">&larr; Indietro</button>
+                <h2>&#128203; Storico Completati</h2>
+            </div>
+            <div id="staffHistoryList" class="history-list"></div>
+        </div>
+
+        <!-- Modal Password -->
+        <div id="passwordModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closePasswordModal()">&times;</span>
+                <h3>Accesso Staff</h3>
+                <input type="password" id="staffPassword" placeholder="Password">
+                <button onclick="checkPassword()">Accedi</button>
+            </div>
+        </div>
+
+        <!-- Notifica toast -->
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

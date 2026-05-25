@@ -1,0 +1,416 @@
+{
+  "config": {
+    "openingHours": {
+      "ristorante": [
+        {
+          "start": "12:00",
+          "end": "14:30"
+        },
+        {
+          "start": "19:00",
+          "end": "22:30"
+        }
+      ],
+      "bar": [
+        {
+          "start": "07:00",
+          "end": "21:00"
+        }
+      ]
+    }
+  },
+  "ristorante": {
+    "Antipasti": [
+      {
+        "name": "Burrata pugliese",
+        "desc": "Burrata cremosa, pomodorini confit, basilico",
+        "price": 12,
+        "type": "cibo",
+        "img": "🍽️"
+      },
+      {
+        "name": "Caprese al cucchiaio",
+        "desc": "Mozzarella, datterini, crema di basilico",
+        "price": 10,
+        "type": "cibo",
+        "img": "🥗"
+      },
+      {
+        "name": "Polpo alla griglia",
+        "desc": "Polpo tenero, patate affumicate, salsa verde",
+        "price": 16,
+        "type": "cibo",
+        "img": "🐙"
+      },
+      {
+        "name": "Carpaccio di manzo",
+        "desc": "Fassona, grana, rucola, lime",
+        "price": 14,
+        "type": "cibo",
+        "img": "🥩"
+      }
+    ],
+    "Primi": [
+      {
+        "name": "Orecchiette cime di rapa",
+        "desc": "Orecchiette fresche, cime di rapa, acciughe",
+        "price": 14,
+        "type": "cibo",
+        "img": "🍝"
+      },
+      {
+        "name": "Risotto ai frutti di mare",
+        "desc": "Risotto cremoso, frutti di mare misti",
+        "price": 22,
+        "type": "cibo",
+        "img": "🍚"
+      },
+      {
+        "name": "Troccoli al sugo di braciola",
+        "desc": "Troccoli fatti in casa, sugo di braciola",
+        "price": 16,
+        "type": "cibo",
+        "img": "🍝"
+      },
+      {
+        "name": "Gnocchi allo scoglio",
+        "desc": "Gnocchi di patate, frutti di mare",
+        "price": 20,
+        "type": "cibo",
+        "img": "🥔"
+      }
+    ],
+    "Secondi": [
+      {
+        "name": "Filetto di manzo",
+        "desc": "Filetto, riduzione al Barolo, rucola",
+        "price": 28,
+        "type": "cibo",
+        "img": "🥩"
+      },
+      {
+        "name": "Grigliata di pesce",
+        "desc": "Orata, spigola, gamberi, calamari",
+        "price": 32,
+        "type": "cibo",
+        "img": "🐟"
+      },
+      {
+        "name": "Polpette di melanzane",
+        "desc": "Polpette di melanzane, pomodoro fresco, basilico",
+        "price": 14,
+        "type": "cibo",
+        "img": "🍆"
+      },
+      {
+        "name": "Tagliata di tonno",
+        "desc": "Tonno fresco scottato, sesamo, rucola",
+        "price": 26,
+        "type": "cibo",
+        "img": "🐟"
+      }
+    ],
+    "Contorni": [
+      {
+        "name": "Verdure grigliate",
+        "desc": "Zucchine, melanzane, peperoni",
+        "price": 6,
+        "type": "cibo",
+        "img": "🥒"
+      },
+      {
+        "name": "Patate al forno",
+        "desc": "Patate, rosmarino, aglio",
+        "price": 5,
+        "type": "cibo",
+        "img": "🥔"
+      },
+      {
+        "name": "Insalata mista",
+        "desc": "Lattuga, valeriana, pomodorini",
+        "price": 5,
+        "type": "cibo",
+        "img": "🥗"
+      }
+    ],
+    "Dolci": [
+      {
+        "name": "Tiramisù classico",
+        "desc": "Caffè, savoiardi, mascarpone",
+        "price": 6,
+        "type": "cibo",
+        "img": "🍰"
+      },
+      {
+        "name": "Panna cotta al caramello",
+        "desc": "Panna cotta, caramello salato",
+        "price": 6,
+        "type": "cibo",
+        "img": "🍮"
+      },
+      {
+        "name": "Pasticciotto leccese",
+        "desc": "Pasticciotto caldo, crema pasticcera",
+        "price": 5,
+        "type": "cibo",
+        "img": "🥧"
+      },
+      {
+        "name": "Cheesecake ai frutti di bosco",
+        "desc": "Base biscotto, frutti di bosco",
+        "price": 7,
+        "type": "cibo",
+        "img": "🍰"
+      }
+    ]
+  },
+  "bar": {
+    "Caffetteria": [
+      {
+        "name": "Caffè espresso",
+        "desc": "",
+        "price": 1.5,
+        "type": "bevanda",
+        "img": "☕"
+      },
+      {
+        "name": "Caffè macchiato",
+        "desc": "",
+        "price": 1.8,
+        "type": "bevanda",
+        "img": "☕"
+      },
+      {
+        "name": "Cappuccino",
+        "desc": "",
+        "price": 2.5,
+        "type": "bevanda",
+        "img": "☕"
+      },
+      {
+        "name": "Marocchino",
+        "desc": "",
+        "price": 2.5,
+        "type": "bevanda",
+        "img": "☕"
+      },
+      {
+        "name": "Cioccolata calda",
+        "desc": "",
+        "price": 3.5,
+        "type": "bevanda",
+        "img": "🍫"
+      }
+    ],
+    "Thè e Infusi": [
+      {
+        "name": "Thè al limone",
+        "desc": "",
+        "price": 2.5,
+        "type": "bevanda",
+        "img": "🍵"
+      },
+      {
+        "name": "Thè al pesca",
+        "desc": "",
+        "price": 2.5,
+        "type": "bevanda",
+        "img": "🍵"
+      }
+    ],
+    "Spritz e Aperitivi": [
+      {
+        "name": "Spritz",
+        "desc": "Aperol, Prosecco, soda",
+        "price": 6,
+        "type": "bevanda",
+        "img": "🍹"
+      },
+      {
+        "name": "Hugo",
+        "desc": "Sambuco, prosecco, menta",
+        "price": 6,
+        "type": "bevanda",
+        "img": "🍹"
+      },
+      {
+        "name": "Gin Lemon",
+        "desc": "Gin, limone, soda",
+        "price": 7,
+        "type": "bevanda",
+        "img": "🍸"
+      }
+    ],
+    "Analcoliche": [
+      {
+        "name": "Acqua naturale 0.5L",
+        "desc": "",
+        "price": 1.5,
+        "type": "bevanda",
+        "img": "💧"
+      },
+      {
+        "name": "Acqua frizzante 0.5L",
+        "desc": "",
+        "price": 1.5,
+        "type": "bevanda",
+        "img": "💧"
+      },
+      {
+        "name": "Coca Cola",
+        "desc": "",
+        "price": 3,
+        "type": "bevanda",
+        "img": "🥤"
+      },
+      {
+        "name": "Fanta",
+        "desc": "",
+        "price": 3,
+        "type": "bevanda",
+        "img": "🥤"
+      },
+      {
+        "name": "Sprite",
+        "desc": "",
+        "price": 3,
+        "type": "bevanda",
+        "img": "🥤"
+      },
+      {
+        "name": "Succo di frutta",
+        "desc": "",
+        "price": 3,
+        "type": "bevanda",
+        "img": "🧃"
+      }
+    ],
+    "Birre": [
+      {
+        "name": "Artigianale bionda",
+        "desc": "",
+        "price": 5,
+        "type": "bevanda",
+        "img": "🍺"
+      },
+      {
+        "name": "Artigianale rossa",
+        "desc": "",
+        "price": 5,
+        "type": "bevanda",
+        "img": "🍺"
+      },
+      {
+        "name": "Ichnusa non filtrata",
+        "desc": "",
+        "price": 4,
+        "type": "bevanda",
+        "img": "🍺"
+      },
+      {
+        "name": "Moretti",
+        "desc": "",
+        "price": 3.5,
+        "type": "bevanda",
+        "img": "🍺"
+      }
+    ],
+    "Vini (bottiglia)": [
+      {
+        "name": "Primitivo",
+        "desc": "Bottiglia 0.75L",
+        "price": 18,
+        "type": "bevanda",
+        "img": "🍷"
+      },
+      {
+        "name": "Negroamaro",
+        "desc": "Bottiglia 0.75L",
+        "price": 16,
+        "type": "bevanda",
+        "img": "🍷"
+      },
+      {
+        "name": "Susumaniello",
+        "desc": "Bottiglia 0.75L",
+        "price": 20,
+        "type": "bevanda",
+        "img": "🍷"
+      },
+      {
+        "name": "Fiano",
+        "desc": "Bottiglia 0.75L",
+        "price": 18,
+        "type": "bevanda",
+        "img": "🍷"
+      },
+      {
+        "name": "Falanghina",
+        "desc": "Bottiglia 0.75L",
+        "price": 16,
+        "type": "bevanda",
+        "img": "🍷"
+      },
+      {
+        "name": "Prosecco DOCG",
+        "desc": "Bottiglia 0.75L",
+        "price": 20,
+        "type": "bevanda",
+        "img": "🥂"
+      }
+    ],
+    "Vini (calice)": [
+      {
+        "name": "Primitivo calice",
+        "desc": "",
+        "price": 6,
+        "type": "bevanda",
+        "img": "🍷"
+      },
+      {
+        "name": "Negroamaro calice",
+        "desc": "",
+        "price": 5,
+        "type": "bevanda",
+        "img": "🍷"
+      },
+      {
+        "name": "Fiano calice",
+        "desc": "",
+        "price": 6,
+        "type": "bevanda",
+        "img": "🍷"
+      },
+      {
+        "name": "Falanghina calice",
+        "desc": "",
+        "price": 5,
+        "type": "bevanda",
+        "img": "🍷"
+      }
+    ],
+    "Distillati": [
+      {
+        "name": "Amaro del Capo",
+        "desc": "",
+        "price": 4,
+        "type": "bevanda",
+        "img": "🧃"
+      },
+      {
+        "name": "Limoncello",
+        "desc": "",
+        "price": 4,
+        "type": "bevanda",
+        "img": "🍋"
+      },
+      {
+        "name": "Grappa",
+        "desc": "",
+        "price": 5,
+        "type": "bevanda",
+        "img": "🧃"
+      }
+    ]
+  }
+}
