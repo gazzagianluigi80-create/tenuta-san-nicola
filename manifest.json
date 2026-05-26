@@ -1,7 +1,7 @@
 {
-    "name": "LATENUTA SAN NICOLA",
+    "name": "TENUTA SAN NICOLA",
     "short_name": "TSN",
-    "description": "Ordinazioni ristorante e bar - LATENUTA SAN NICOLA",
+    "description": "Ordinazioni ristorante e bar - TENUTA SAN NICOLA",
     "start_url": "index.html",
     "display": "standalone",
     "background_color": "#F5F2E8",
