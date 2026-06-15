@@ -67,6 +67,7 @@
         .resoconto { background: white; border-radius: 15px; padding: 20px; margin-bottom: 20px; display: none; }
         .resoconto.show { display: block; }
         .resoconto h3 { color: #2E5A3B; margin-bottom: 12px; font-size: 1.1rem; }
+        .resoconto .close-report { float: right; cursor: pointer; font-size: 1.5rem; color: #999; line-height: 1; }
         .resoconto .periodo { font-size: 0.85rem; color: #666; margin-bottom: 15px; }
         .resoconto .gruppo { margin-bottom: 15px; }
         .resoconto .gruppo h4 { font-size: 0.95rem; color: #2E5A3B; margin-bottom: 8px; }
@@ -125,6 +126,14 @@
             <div class="form-row">
                 <input type="text" id="clientName" placeholder="Nome e cognome">
                 <input type="tel" id="clientPhone" placeholder="Telefono">
+            </div>
+            <div class="form-row">
+                <input type="number" id="bookSdraio" placeholder="&#9971; Sedie/Sdraio" min="0" style="max-width:130px;">
+                <input type="number" id="bookPersone" placeholder="&#128101; Persone" min="1" value="1" style="max-width:120px;">
+                <select id="bookBambini" style="max-width:130px;">
+                    <option value="no">&#128118; Bambini: No</option>
+                    <option value="si">&#128118; Bambini: Sì</option>
+                </select>
             </div>
             <div class="form-row">
                 <input type="date" id="bookStart">
@@ -393,7 +402,7 @@
             const durata = giorni === 1 ? '1 giorno' : `${giorni} giorni`;
 
             let html = `
-                <h3>&#128202; Resoconto disponibilità</h3>
+                <h3>&#128202; Resoconto disponibilità <span class="close-report" onclick="document.getElementById('resoconto').classList.remove('show')">&times;</span></h3>
                 <div class="periodo">${formatDate(start)} &rarr; ${formatDate(end)} &middot; ${durata} &middot; ${slotLabel}</div>
             `;
 
@@ -464,6 +473,9 @@
             const start = document.getElementById('bookStart').value;
             const end = document.getElementById('bookEnd').value;
             const slot = document.getElementById('bookSlot').value;
+            const sdraio = parseInt(document.getElementById('bookSdraio').value) || 0;
+            const persone = parseInt(document.getElementById('bookPersone').value) || 1;
+            const bambini = document.getElementById('bookBambini').value;
 
             if (!name) { showToast('Inserisci nome e cognome'); return; }
             if (!start || !end) { showToast('Seleziona le date'); return; }
@@ -486,7 +498,10 @@
                     clientPhone: phone,
                     startDate: start,
                     endDate: end,
-                    slot: slot
+                    slot: slot,
+                    sdraio: sdraio,
+                    persone: persone,
+                    bambini: bambini
                 })
             });
 
@@ -497,6 +512,9 @@
                 showToast(`&#9989; ${selectedSpot.type === 'ombrelloni' ? 'Ombrellone' : 'Gazebo'} ${selectedSpot.spotId} prenotato! ${durata} — ${slotLabel}`);
                 document.getElementById('clientName').value = '';
                 document.getElementById('clientPhone').value = '';
+                document.getElementById('bookSdraio').value = '';
+                document.getElementById('bookPersone').value = '1';
+                document.getElementById('bookBambini').value = 'no';
                 selectedSpot = null;
                 updateSelectedSpotInfo();
                 await loadBookings();
@@ -545,6 +563,7 @@
                     <div class="booking-item">
                         <div class="info">
                             <strong>${typeLabel} ${b.spot}</strong> - ${b.clientName} ${b.clientPhone ? '<small>Tel: ' + b.clientPhone + '</small>' : ''}
+                            ${b.persone ? `<small>&#128101; ${b.persone} pers.${b.bambini === 'si' ? ' + bambini' : ''}${b.sdraio ? ' | &#9971; ' + b.sdraio + ' sdraio' : ''}</small>` : ''}
                             <small>Prenotato il ${new Date(b.timestamp).toLocaleDateString('it-IT')}</small>
                         </div>
                         <div class="dates">${dateInfo}</div>
