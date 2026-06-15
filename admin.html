@@ -97,18 +97,25 @@
         }
 
         async function adminLogin() {
-            const pw = document.getElementById('adminPassword').value;
-            const result = await api('/api/menu/login', {
-                method: 'POST',
-                body: JSON.stringify({ password: pw })
-            });
-            if (result.success) {
-                adminToken = result.token;
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('adminPanel').style.display = 'block';
-                await loadMenu();
-            } else {
+            try {
+                const pw = document.getElementById('adminPassword').value;
+                const result = await api('/api/menu/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ password: pw })
+                });
+                if (result.success) {
+                    adminToken = result.token;
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    await loadMenu();
+                } else {
+                    document.getElementById('loginError').textContent = result.error || 'Password errata';
+                    document.getElementById('loginError').style.display = 'block';
+                }
+            } catch (e) {
+                document.getElementById('loginError').textContent = 'Errore: ' + e.message;
                 document.getElementById('loginError').style.display = 'block';
+                console.error(e);
             }
         }
 

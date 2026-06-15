@@ -2,6 +2,36 @@
 let menu = { ristorante: {}, bar: {} };
 
 // ==================== VARIABILI GLOBALI ====================
+const ROOMS = [
+  { id: 1, name: 'Messapi' },
+  { id: 2, name: 'Greci' },
+  { id: 3, name: 'Bizantini' },
+  { id: 4, name: 'Camera delle rose' },
+  { id: 5, name: 'Romani' },
+  { id: 6, name: 'Borboni' },
+  { id: 7, name: 'Camera padronale' },
+  { id: 8, name: 'Pesco' },
+  { id: 9, name: 'Mimosa' },
+  { id: 10, name: 'Ulivo' },
+  { id: 11, name: 'Melograno' },
+  { id: 12, name: "Fico d'india" }
+];
+
+function getRoomName(id) {
+  const room = ROOMS.find(r => r.id === id);
+  return room ? room.name : `Stanza ${id}`;
+}
+
+function renderRoomButtons() {
+  const container = document.getElementById('roomGrid');
+  if (!container) return;
+  let html = '';
+  ROOMS.forEach(r => {
+    html += `<button class="room-demo-btn" onclick="setRoom(${r.id})">${r.name}</button>`;
+  });
+  container.innerHTML = html;
+}
+
 let currentRole = null;
 let currentRoom = null;
 let currentMenuType = "ristorante";
@@ -57,8 +87,8 @@ function setRole(role) {
 
 function setRoom(num) {
     currentRoom = num;
-    document.getElementById('roomBadge').textContent = `Stanza ${num}`;
-    document.querySelector('.room-number').textContent = `Stanza ${num}`;
+    document.getElementById('roomBadge').textContent = `${getRoomName(num)}`;
+    document.querySelector('.room-number').textContent = `${getRoomName(num)}`;
     loadCart();
     setRole('guest');
 }
@@ -382,7 +412,7 @@ function showHistory() {
         const date = new Date(order.timestamp);
         html += `
             <div class="history-item">
-                <strong>#${order.id.toUpperCase()}</strong> - Stanza ${order.room}<br>
+                <strong>#${order.id.toUpperCase()}</strong> - ${getRoomName(order.room)}<br>
                 <small>${date.toLocaleDateString('it-IT')} ${date.toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'})}</small><br>
                 ${itemsList}<br>
                 <small>Totale: \u20AC${order.items.reduce((s, i) => s + i.price * i.qty, 0).toFixed(2)}</small>
@@ -466,7 +496,7 @@ function renderStaffOrders(container, activeOrders, staffRole) {
 
         html += `
             <div class="order-card ${isKitchen && isReady ? 'kitchen-ready' : ''}">
-                <h4>#${order.id.toUpperCase()} - Stanza ${order.room}</h4>
+                <h4>#${order.id.toUpperCase()} - ${getRoomName(order.room)}</h4>
                 <div class="order-meta" style="font-size:0.8rem;color:#666;margin-bottom:8px;">
                     ${date.toLocaleDateString('it-IT')} ${date.toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'})}
                     ${order.time ? `- Orario: ${order.time}` : ''}
@@ -559,12 +589,12 @@ function renderReceptionDashboard() {
         html += `
             <div class="order-card" style="border-left-color:#2E5A3B;">
                 <div style="display:flex;justify-content:space-between;align-items:center;">
-                    <h4>&#127968; Stanza ${room}</h4>
+                    <h4>&#127968; ${getRoomName(parseInt(room))}</h4>
                     <h3 style="color:#D95A2B;">\u20AC${roomTotal.toFixed(2)}</h3>
                 </div>
                 ${roomHtml}
                 <button class="submit-order-btn" style="background:#D95A2B;margin-top:10px;font-size:0.9rem;padding:10px;" onclick="markRoomAsPaid(${room})">
-                    &#128179; Segna come pagato (Stanza ${room})
+                    &#128179; Segna come pagato (${getRoomName(room)})
                 </button>
             </div>
         `;
@@ -584,7 +614,7 @@ function markRoomAsPaid(room) {
     });
 
     renderReceptionDashboard();
-    showToast(`\u2705 Stanza ${room} pagata (\u20AC${roomOrders.reduce((s,o) => s + o.items.reduce((s2,i) => s2 + i.price * i.qty, 0), 0).toFixed(2)})`);
+    showToast(`\u2705 ${getRoomName(room)} pagata (\u20AC${roomOrders.reduce((s,o) => s + o.items.reduce((s2,i) => s2 + i.price * i.qty, 0), 0).toFixed(2)})`);
 }
 
 function showReceptionHistory() {
@@ -619,7 +649,7 @@ function showReceptionHistory() {
 
         html += `
             <div class="history-item">
-                <strong>&#127968; Stanza ${room}</strong>
+                <strong>&#127968; ${getRoomName(parseInt(room))}</strong>
                 <span style="float:right;color:#2E5A3B;font-weight:bold;">\u20AC${roomTotal.toFixed(2)}</span>
                 <br>
                 <small style="color:#999;">
@@ -666,7 +696,7 @@ function showStaffHistory(role) {
         const date = new Date(order.timestamp);
         html += `
             <div class="history-item">
-                <strong>#${order.id.toUpperCase()}</strong> - Stanza ${order.room}<br>
+                <strong>#${order.id.toUpperCase()}</strong> - ${getRoomName(order.room)}<br>
                 <small>${date.toLocaleDateString('it-IT')} ${date.toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'})}</small><br>
                 ${itemsList}<br>
                 <small>Totale: \u20AC${order.items.reduce((s, i) => s + i.price * i.qty, 0).toFixed(2)}</small>
@@ -727,6 +757,8 @@ function getUrlParam(name) {
 }
 
 async function initApp() {
+    renderRoomButtons();
+
     const menuLoaded = await loadMenuFromServer();
     if (!menuLoaded) {
         showToast('Errore caricamento menu');
@@ -741,7 +773,7 @@ async function initApp() {
         const savedRoom = localStorage.getItem('currentRoom');
         if (savedRoom) {
             currentRoom = parseInt(savedRoom);
-            document.getElementById('roomBadge').textContent = `Stanza ${currentRoom}`;
+            document.getElementById('roomBadge').textContent = `${getRoomName(currentRoom)}`;
         }
     }
 }
@@ -750,8 +782,8 @@ const origSetRoom = setRoom;
 setRoom = function(num) {
     currentRoom = num;
     localStorage.setItem('currentRoom', num);
-    document.getElementById('roomBadge').textContent = `Stanza ${num}`;
-    document.querySelector('.room-number').textContent = `Stanza ${num}`;
+    document.getElementById('roomBadge').textContent = `${getRoomName(num)}`;
+    document.querySelector('.room-number').textContent = `${getRoomName(num)}`;
     loadCart();
     setRole('guest');
 };

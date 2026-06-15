@@ -103,24 +103,39 @@
     <script>
         const baseUrl = window.location.origin + window.location.pathname.replace('qrcodes.html', 'index.html');
 
+        const ROOMS = [
+            { id: 1, name: 'Messapi' },
+            { id: 2, name: 'Greci' },
+            { id: 3, name: 'Bizantini' },
+            { id: 4, name: 'Camera delle rose' },
+            { id: 5, name: 'Romani' },
+            { id: 6, name: 'Borboni' },
+            { id: 7, name: 'Camera padronale' },
+            { id: 8, name: 'Pesco' },
+            { id: 9, name: 'Mimosa' },
+            { id: 10, name: 'Ulivo' },
+            { id: 11, name: 'Melograno' },
+            { id: 12, name: "Fico d'india" }
+        ];
+
         const grid = document.getElementById('qrGrid');
 
-        for (let i = 1; i <= 15; i++) {
-            const url = baseUrl + '?room=' + i;
+        ROOMS.forEach(r => {
+            const url = baseUrl + '?room=' + r.id;
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
-                <h2>Stanza ${i}</h2>
-                <div class="qr" id="qr_${i}"></div>
-                <div class="label">Stanza ${i}</div>
+                <h2>${r.name}</h2>
+                <div class="qr" id="qr_${r.id}"></div>
+                <div class="label">${r.name}</div>
                 <div class="url">${url}</div>
             `;
             grid.appendChild(card);
-        }
+        });
 
-        for (let i = 1; i <= 15; i++) {
-            const url = baseUrl + '?room=' + i;
-            new QRCode(document.getElementById('qr_' + i), {
+        ROOMS.forEach(r => {
+            const url = baseUrl + '?room=' + r.id;
+            new QRCode(document.getElementById('qr_' + r.id), {
                 text: url,
                 width: 150,
                 height: 150,
@@ -128,7 +143,7 @@
                 colorLight: '#ffffff',
                 correctLevel: QRCode.CorrectLevel.H
             });
-        }
+        });
     </script>
 </body>
 </html>
