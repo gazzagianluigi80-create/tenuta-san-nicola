@@ -89,7 +89,6 @@
             <select id="filterSlot">
                 <option value="mattina">Mattina (8-13)</option>
                 <option value="pomeriggio">Pomeriggio (13-18)</option>
-                <option value="giornata_intera">Giornata intera (8-18)</option>
             </select>
             <button onclick="checkAvailability()" style="padding:8px 16px;background:#2E5A3B;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:bold;">Verifica</button>
             <div class="quick-btns">
@@ -126,7 +125,6 @@
                 <select id="bookSlot">
                     <option value="mattina">Mattina (8-13)</option>
                     <option value="pomeriggio">Pomeriggio (13-18)</option>
-                    <option value="giornata_intera">Giornata intera (8-18)</option>
                 </select>
                 <button id="btnBook" onclick="createBooking()" disabled>Prenota</button>
             </div>
@@ -146,8 +144,7 @@
     <script>
         const SLOTS = [
             { id: 'mattina', label: 'Mattina (8-13)', short: '8-13' },
-            { id: 'pomeriggio', label: 'Pomeriggio (13-18)', short: '13-18' },
-            { id: 'giornata_intera', label: 'Giornata intera (8-18)', short: '8-18' }
+            { id: 'pomeriggio', label: 'Pomeriggio (13-18)', short: '13-18' }
         ];
 
         const SPOTS = {
@@ -238,7 +235,6 @@
         function isDaySlotBooked(date, type, spotId, slot) {
             const dayBookings = getDayBookings(date, type, spotId);
             for (const b of dayBookings) {
-                if (b.slot === 'giornata_intera') return true;
                 if (b.slot === slot) return true;
             }
             return false;
