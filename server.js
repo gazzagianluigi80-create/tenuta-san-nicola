@@ -200,6 +200,56 @@ http.createServer(async (req, res) => {
         return;
     }
 
+    // ==================== BOOKING API ====================
+    const BOOKINGS_FILE = path.join(dir, 'bookings.json');
+
+    function loadBookings() {
+        try {
+            if (fs.existsSync(BOOKINGS_FILE)) {
+                return JSON.parse(fs.readFileSync(BOOKINGS_FILE, 'utf8'));
+            }
+        } catch (e) {}
+        return [];
+    }
+
+    function saveBookings(data) {
+        fs.writeFileSync(BOOKINGS_FILE, JSON.stringify(data, null, 2), 'utf8');
+    }
+
+    // API: GET /api/bookings
+    if (pathname === '/api/bookings' && method === 'GET') {
+        sendJSON(res, loadBookings());
+        return;
+    }
+
+    // API: POST /api/bookings
+    if (pathname === '/api/bookings' && method === 'POST') {
+        const data = await parseBody(req);
+        const bookings = loadBookings();
+        data.id = Date.now().toString(36) + Math.random().toString(36).substr(2, 3);
+        data.timestamp = new Date().toISOString();
+        bookings.push(data);
+        saveBookings(bookings);
+        sendJSON(res, { success: true, booking: data }, 201);
+        return;
+    }
+
+    // API: DELETE /api/bookings/:id
+    const bookingDelMatch = pathname.match(/^\/api\/bookings\/(.+)$/);
+    if (bookingDelMatch && method === 'DELETE') {
+        const id = bookingDelMatch[1];
+        const bookings = loadBookings();
+        const idx = bookings.findIndex(b => b.id === id);
+        if (idx !== -1) {
+            bookings.splice(idx, 1);
+            saveBookings(bookings);
+            sendJSON(res, { success: true });
+        } else {
+            sendJSON(res, { error: 'Prenotazione non trovata' }, 404);
+        }
+        return;
+    }
+
     // Servi file statici
     let servePath = pathname === '/' ? '/index.html' : pathname;
     const fullPath = path.join(dir, servePath);

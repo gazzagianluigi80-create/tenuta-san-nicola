@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prenotazioni - TENUTA SAN NICOLA</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background: #F5F2E8; }
+        .booking-container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .booking-container h1 { color: #2E5A3B; text-align: center; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #999; font-size: 0.9rem; margin-bottom: 20px; }
+        .booking-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .booking-header a { color: #2E5A3B; text-decoration: none; font-size: 0.9rem; }
+        .date-filters { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; }
+        .date-filters label { font-size: 0.85rem; font-weight: bold; color: #2E5A3B; }
+        .date-filters input[type="date"] { padding: 8px; border: 1px solid #C9A87C; border-radius: 8px; font-size: 0.9rem; flex: 1; min-width: 140px; }
+        .legend { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; }
+        .legend-color { width: 16px; height: 16px; border-radius: 4px; }
+        .legend-color.available { background: #C8E6C9; }
+        .legend-color.partial { background: #FFE0B2; }
+        .legend-color.booked { background: #FFCDD2; }
+        .spots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-bottom: 25px; }
+        .spot-card { background: white; border-radius: 12px; padding: 12px; text-align: center; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; }
+        .spot-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .spot-card.selected { border-color: #2E5A3B; box-shadow: 0 0 0 2px #2E5A3B; }
+        .spot-card .icon { font-size: 2rem; }
+        .spot-card .name { font-weight: bold; font-size: 0.95rem; margin: 5px 0; }
+        .spot-card .status { font-size: 0.75rem; border-radius: 10px; padding: 3px 8px; display: inline-block; }
+        .spot-card.available { background: #E8F5E9; }
+        .spot-card.available .status { background: #4CAF50; color: white; }
+        .spot-card.partial { background: #FFF3E0; }
+        .spot-card.partial .status { background: #FF9800; color: white; }
+        .spot-card.booked { background: #FFEBEE; }
+        .spot-card.booked .status { background: #F44336; color: white; }
+        .section-title { font-size: 1.1rem; color: #2E5A3B; margin: 20px 0 10px; padding-bottom: 5px; border-bottom: 2px solid #C9A87C; }
+        .booking-form { background: white; border-radius: 15px; padding: 20px; margin-bottom: 25px; }
+        .booking-form h3 { color: #2E5A3B; margin-bottom: 15px; }
+        .form-row { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+        .form-row input { flex: 1; padding: 10px; border: 1px solid #C9A87C; border-radius: 8px; font-size: 0.9rem; min-width: 180px; }
+        .form-row button { padding: 10px 20px; background: #2E5A3B; color: white; border: none; border-radius: 10px; font-size: 1rem; cursor: pointer; font-weight: bold; }
+        .form-row button:disabled { background: #ccc; cursor: not-allowed; }
+        .selected-spot-info { text-align: center; background: #F9F7F2; padding: 10px; border-radius: 8px; margin-bottom: 12px; font-size: 0.9rem; }
+        .bookings-list { background: white; border-radius: 15px; padding: 20px; }
+        .bookings-list h3 { color: #2E5A3B; margin-bottom: 15px; }
+        .booking-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; flex-wrap: wrap; gap: 8px; }
+        .booking-item:last-child { border-bottom: none; }
+        .booking-item .info { flex: 1; min-width: 200px; }
+        .booking-item .info strong { color: #2E5A3B; }
+        .booking-item .info small { color: #999; display: block; }
+        .booking-item .dates { color: #D95A2B; font-weight: bold; font-size: 0.85rem; }
+        .del-btn { background: #D95A2B; color: white; border: none; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 0.8rem; }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #2E5A3B; color: white; padding: 12px 20px; border-radius: 30px; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s; z-index: 1000; pointer-events: none; }
+        .toast.show { opacity: 1; }
+        .tab-bar { display: flex; gap: 10px; margin-bottom: 15px; }
+        .tab-bar button { flex: 1; padding: 10px; border: 2px solid #C9A87C; background: white; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
+        .tab-bar button.active { background: #C9A87C; color: #2E5A3B; }
+        @media (max-width: 600px) {
+            .spots-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="booking-container">
+        <div class="booking-header">
+            <a href="index.html">&larr; Torna all'app</a>
+            <h1>&#9971; Prenotazioni</h1>
+            <span></span>
+        </div>
+        <p class="subtitle">Ombrelloni & Gazebo - Tenuta San Nicola</p>
+
+        <div class="date-filters">
+            <label>Dal:</label>
+            <input type="date" id="filterStart">
+            <label>Al:</label>
+            <input type="date" id="filterEnd">
+            <button onclick="checkAvailability()" style="padding:8px 16px;background:#2E5A3B;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:bold;">Verifica</button>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item"><div class="legend-color available"></div> Disponibile</div>
+            <div class="legend-item"><div class="legend-color partial"></div> Parzialmente occupato</div>
+            <div class="legend-item"><div class="legend-color booked"></div> Completamente occupato</div>
+        </div>
+
+        <div class="tab-bar">
+            <button class="active" onclick="switchTab('ombrelloni')">&#9971; Ombrelloni</button>
+            <button onclick="switchTab('gazebo')">&#9962; Gazebo</button>
+        </div>
+
+        <div id="spotsContainer"></div>
+
+        <div class="booking-form" id="bookingForm">
+            <h3>&#128221; Nuova Prenotazione</h3>
+            <div class="selected-spot-info" id="selectedSpotInfo">Seleziona un ombrellone o gazebo dalla griglia sopra</div>
+            <div class="form-row">
+                <input type="text" id="clientName" placeholder="Nome e cognome">
+                <input type="tel" id="clientPhone" placeholder="Telefono">
+            </div>
+            <div class="form-row">
+                <input type="date" id="bookStart">
+                <input type="date" id="bookEnd">
+                <button id="btnBook" onclick="createBooking()" disabled>Prenota</button>
+            </div>
+        </div>
+
+        <div class="bookings-list">
+            <h3>&#128195; Prenotazioni</h3>
+            <div id="bookingsContainer">
+                <p style="text-align:center;color:#999;margin:20px 0;">Caricamento...</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        const SPOTS = {
+            ombrelloni: [
+                { id: 1, name: 'Ombrellone 1', icon: '&#9971;' },
+                { id: 2, name: 'Ombrellone 2', icon: '&#9971;' },
+                { id: 3, name: 'Ombrellone 3', icon: '&#9971;' },
+                { id: 4, name: 'Ombrellone 4', icon: '&#9971;' },
+                { id: 5, name: 'Ombrellone 5', icon: '&#9971;' },
+                { id: 6, name: 'Ombrellone 6', icon: '&#9971;' },
+                { id: 7, name: 'Ombrellone 7', icon: '&#9971;' },
+                { id: 8, name: 'Ombrellone 8', icon: '&#9971;' }
+            ],
+            gazebo: [
+                { id: 1, name: 'Gazebo 1', icon: '&#9962;' },
+                { id: 2, name: 'Gazebo 2', icon: '&#9962;' },
+                { id: 3, name: 'Gazebo 3', icon: '&#9962;' }
+            ]
+        };
+
+        let bookings = [];
+        let currentTab = 'ombrelloni';
+        let selectedSpot = null;
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2500);
+        }
+
+        async function api(url, opts = {}) {
+            const headers = { 'Content-Type': 'application/json' };
+            const res = await fetch(url, { ...opts, headers });
+            return res.json();
+        }
+
+        async function loadBookings() {
+            try {
+                const data = await api('/api/bookings');
+                if (Array.isArray(data)) bookings = data;
+                renderSpots();
+                renderBookings();
+            } catch (e) {
+                document.getElementById('bookingsContainer').innerHTML = '<p style="text-align:center;color:#D95A2B;margin:20px 0;">Errore caricamento prenotazioni</p>';
+            }
+        }
+
+        function isOverlapping(start1, end1, start2, end2) {
+            return start1 <= end2 && end1 >= start2;
+        }
+
+        function getSpotStatus(type, spotId, rangeStart, rangeEnd) {
+            if (!rangeStart || !rangeEnd) return 'available';
+            const spotBookings = bookings.filter(b => b.type === type && b.spot === spotId);
+            if (spotBookings.length === 0) return 'available';
+
+            const allOverlapping = spotBookings.every(b => isOverlapping(b.startDate, b.endDate, rangeStart, rangeEnd));
+            const anyOverlapping = spotBookings.some(b => isOverlapping(b.startDate, b.endDate, rangeStart, rangeEnd));
+
+            if (allOverlapping && spotBookings.length > 0) return 'booked';
+            if (anyOverlapping) return 'partial';
+            return 'available';
+        }
+
+        function getBookingsForSpot(type, spotId) {
+            return bookings.filter(b => b.type === type && b.spot === spotId);
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-bar button').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-bar button').forEach(b => {
+                if ((tab === 'ombrelloni' && b.textContent.includes('Ombrelloni')) ||
+                    (tab === 'gazebo' && b.textContent.includes('Gazebo'))) {
+                    b.classList.add('active');
+                }
+            });
+            selectedSpot = null;
+            updateSelectedSpotInfo();
+            renderSpots();
+        }
+
+        function selectSpot(type, spotId) {
+            const rangeStart = document.getElementById('filterStart').value;
+            const rangeEnd = document.getElementById('filterEnd').value;
+            if (!rangeStart || !rangeEnd) {
+                showToast('Seleziona le date per verificare la disponibilità');
+                return;
+            }
+            const status = getSpotStatus(type, spotId, rangeStart, rangeEnd);
+            if (status === 'booked') {
+                showToast('Questo posto non è disponibile nel periodo selezionato');
+                return;
+            }
+            selectedSpot = { type, spotId };
+            document.getElementById('bookStart').value = rangeStart;
+            document.getElementById('bookEnd').value = rangeEnd;
+            updateSelectedSpotInfo();
+            renderSpots();
+        }
+
+        function updateSelectedSpotInfo() {
+            const info = document.getElementById('selectedSpotInfo');
+            const btn = document.getElementById('btnBook');
+            if (!selectedSpot) {
+                const label = currentTab === 'ombrelloni' ? 'ombrellone' : 'gazebo';
+                info.innerHTML = `Seleziona un ${label} dalla griglia sopra`;
+                btn.disabled = true;
+                return;
+            }
+            const list = SPOTS[selectedSpot.type];
+            const spot = list.find(s => s.id === selectedSpot.spotId);
+            if (spot) {
+                info.innerHTML = `Selezionato: <strong>${spot.icon} ${spot.name}</strong>`;
+                btn.disabled = false;
+            }
+        }
+
+        function renderSpots() {
+            const container = document.getElementById('spotsContainer');
+            const rangeStart = document.getElementById('filterStart').value;
+            const rangeEnd = document.getElementById('filterEnd').value;
+            const list = SPOTS[currentTab];
+
+            let html = '';
+            list.forEach(spot => {
+                const status = getSpotStatus(currentTab, spot.id, rangeStart, rangeEnd);
+                const isSelected = selectedSpot && selectedSpot.type === currentTab && selectedSpot.spotId === spot.id;
+                const spotBookings = getBookingsForSpot(currentTab, spot.id);
+
+                let statusLabel = 'Disponibile';
+                if (status === 'booked') statusLabel = 'Occupato';
+                else if (status === 'partial') statusLabel = 'Parziale';
+
+                html += `
+                    <div class="spot-card ${status} ${isSelected ? 'selected' : ''}" onclick="selectSpot('${currentTab}', ${spot.id})">
+                        <div class="icon">${spot.icon}</div>
+                        <div class="name">${spot.name}</div>
+                        <div class="status">${statusLabel}</div>
+                        ${spotBookings.length > 0 ? `<small style="color:#666;display:block;margin-top:4px;font-size:0.7rem;">${spotBookings.length} prenotaz.</small>` : ''}
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        async function checkAvailability() {
+            selectedSpot = null;
+            updateSelectedSpotInfo();
+            renderSpots();
+            renderBookings();
+        }
+
+        async function createBooking() {
+            if (!selectedSpot) {
+                showToast('Seleziona un posto disponibile');
+                return;
+            }
+            const name = document.getElementById('clientName').value.trim();
+            const phone = document.getElementById('clientPhone').value.trim();
+            const start = document.getElementById('bookStart').value;
+            const end = document.getElementById('bookEnd').value;
+
+            if (!name) { showToast('Inserisci nome e cognome'); return; }
+            if (!start || !end) { showToast('Seleziona le date'); return; }
+            if (start > end) { showToast('La data fine deve essere dopo la data inizio'); return; }
+
+            const status = getSpotStatus(selectedSpot.type, selectedSpot.spotId, start, end);
+            if (status === 'booked') {
+                showToast('Questo posto non è disponibile in questo periodo');
+                return;
+            }
+
+            const result = await api('/api/bookings', {
+                method: 'POST',
+                body: JSON.stringify({
+                    type: selectedSpot.type,
+                    spot: selectedSpot.spotId,
+                    clientName: name,
+                    clientPhone: phone,
+                    startDate: start,
+                    endDate: end
+                })
+            });
+
+            if (result.success) {
+                showToast(`&#9989; ${selectedSpot.type === 'ombrelloni' ? 'Ombrellone' : 'Gazebo'} ${selectedSpot.spotId} prenotato!`);
+                document.getElementById('clientName').value = '';
+                document.getElementById('clientPhone').value = '';
+                selectedSpot = null;
+                updateSelectedSpotInfo();
+                await loadBookings();
+            } else {
+                showToast('Errore: ' + (result.error || 'salvataggio fallito'));
+            }
+        }
+
+        async function deleteBooking(id) {
+            if (!confirm('Eliminare questa prenotazione?')) return;
+            const result = await api(`/api/bookings/${id}`, { method: 'DELETE' });
+            if (result.success) {
+                showToast('&#10060; Prenotazione eliminata');
+                await loadBookings();
+            }
+        }
+
+        function renderBookings() {
+            const container = document.getElementById('bookingsContainer');
+            if (bookings.length === 0) {
+                container.innerHTML = '<p style="text-align:center;color:#999;margin:20px 0;">Nessuna prenotazione</p>';
+                return;
+            }
+
+            const sorted = [...bookings].reverse();
+            let html = '';
+            sorted.forEach(b => {
+                const typeLabel = b.type === 'ombrelloni' ? '&#9971; Ombrellone' : '&#9962; Gazebo';
+                html += `
+                    <div class="booking-item">
+                        <div class="info">
+                            <strong>${typeLabel} ${b.spot}</strong> - ${b.clientName} ${b.clientPhone ? '<small>Tel: ' + b.clientPhone + '</small>' : ''}
+                            <small>Prenotato il ${new Date(b.timestamp).toLocaleDateString('it-IT')}</small>
+                        </div>
+                        <div class="dates">${b.startDate} &rarr; ${b.endDate}</div>
+                        <button class="del-btn" onclick="deleteBooking('${b.id}')">&#10005;</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        document.getElementById('filterStart').addEventListener('change', checkAvailability);
+        document.getElementById('filterEnd').addEventListener('change', checkAvailability);
+
+        const today = new Date().toISOString().split('T')[0];
+        const future = new Date();
+        future.setDate(future.getDate() + 30);
+        const futureStr = future.toISOString().split('T')[0];
+        document.getElementById('filterStart').value = today;
+        document.getElementById('filterEnd').value = futureStr;
+        document.getElementById('bookStart').value = today;
+        document.getElementById('bookEnd').value = futureStr;
+
+        loadBookings();
+    </script>
+</body>
+</html>
