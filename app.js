@@ -332,7 +332,11 @@ function isTimeInRange(timeStr, startStr, endStr) {
     const nowMin = now[0] * 60 + now[1];
     const startMin = start[0] * 60 + start[1];
     const endMin = end[0] * 60 + end[1];
-    return nowMin >= startMin && nowMin <= endMin;
+    if (endMin >= startMin) {
+        return nowMin >= startMin && nowMin <= endMin;
+    } else {
+        return nowMin >= startMin || nowMin <= endMin;
+    }
 }
 
 function isOpenNow(type) {
