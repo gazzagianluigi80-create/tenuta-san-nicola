@@ -14,14 +14,14 @@
         .booking-header a { color: #2E5A3B; text-decoration: none; font-size: 0.9rem; }
         .date-filters { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; }
         .date-filters label { font-size: 0.85rem; font-weight: bold; color: #2E5A3B; }
-        .date-filters input[type="date"] { padding: 8px; border: 1px solid #C9A87C; border-radius: 8px; font-size: 0.9rem; flex: 1; min-width: 140px; }
+        .date-filters input[type="date"], .date-filters select { padding: 8px; border: 1px solid #C9A87C; border-radius: 8px; font-size: 0.9rem; flex: 1; min-width: 140px; }
         .legend { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
         .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; }
         .legend-color { width: 16px; height: 16px; border-radius: 4px; }
         .legend-color.available { background: #C8E6C9; }
         .legend-color.partial { background: #FFE0B2; }
         .legend-color.booked { background: #FFCDD2; }
-        .spots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-bottom: 25px; }
+        .spots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 25px; }
         .spot-card { background: white; border-radius: 12px; padding: 12px; text-align: center; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; }
         .spot-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .spot-card.selected { border-color: #2E5A3B; box-shadow: 0 0 0 2px #2E5A3B; }
@@ -34,11 +34,16 @@
         .spot-card.partial .status { background: #FF9800; color: white; }
         .spot-card.booked { background: #FFEBEE; }
         .spot-card.booked .status { background: #F44336; color: white; }
+        .slot-dots { display: flex; justify-content: center; gap: 4px; margin: 6px 0; }
+        .slot-dot { font-size: 0.6rem; padding: 2px 6px; border-radius: 8px; font-weight: bold; }
+        .slot-dot.free { background: #C8E6C9; color: #2E7D32; }
+        .slot-dot.taken { background: #FFCDD2; color: #C62828; }
+        .slot-dot.partial-slot { background: #FFE0B2; color: #E65100; }
         .section-title { font-size: 1.1rem; color: #2E5A3B; margin: 20px 0 10px; padding-bottom: 5px; border-bottom: 2px solid #C9A87C; }
         .booking-form { background: white; border-radius: 15px; padding: 20px; margin-bottom: 25px; }
         .booking-form h3 { color: #2E5A3B; margin-bottom: 15px; }
         .form-row { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-        .form-row input { flex: 1; padding: 10px; border: 1px solid #C9A87C; border-radius: 8px; font-size: 0.9rem; min-width: 180px; }
+        .form-row input, .form-row select { flex: 1; padding: 10px; border: 1px solid #C9A87C; border-radius: 8px; font-size: 0.9rem; min-width: 140px; }
         .form-row button { padding: 10px 20px; background: #2E5A3B; color: white; border: none; border-radius: 10px; font-size: 1rem; cursor: pointer; font-weight: bold; }
         .form-row button:disabled { background: #ccc; cursor: not-allowed; }
         .selected-spot-info { text-align: center; background: #F9F7F2; padding: 10px; border-radius: 8px; margin-bottom: 12px; font-size: 0.9rem; }
@@ -71,10 +76,14 @@
         <p class="subtitle">Ombrelloni & Gazebo - Tenuta San Nicola</p>
 
         <div class="date-filters">
-            <label>Dal:</label>
-            <input type="date" id="filterStart">
-            <label>Al:</label>
-            <input type="date" id="filterEnd">
+            <label>Data:</label>
+            <input type="date" id="filterDate">
+            <label>Fascia:</label>
+            <select id="filterSlot">
+                <option value="mattina">Mattina (8-13)</option>
+                <option value="pomeriggio">Pomeriggio (13-18)</option>
+                <option value="giornata_intera">Giornata intera (8-18)</option>
+            </select>
             <button onclick="checkAvailability()" style="padding:8px 16px;background:#2E5A3B;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:bold;">Verifica</button>
         </div>
 
@@ -99,8 +108,12 @@
                 <input type="tel" id="clientPhone" placeholder="Telefono">
             </div>
             <div class="form-row">
-                <input type="date" id="bookStart">
-                <input type="date" id="bookEnd">
+                <input type="date" id="bookDate">
+                <select id="bookSlot">
+                    <option value="mattina">Mattina (8-13)</option>
+                    <option value="pomeriggio">Pomeriggio (13-18)</option>
+                    <option value="giornata_intera">Giornata intera (8-18)</option>
+                </select>
                 <button id="btnBook" onclick="createBooking()" disabled>Prenota</button>
             </div>
         </div>
@@ -116,6 +129,12 @@
     <div id="toast" class="toast"></div>
 
     <script>
+        const SLOTS = [
+            { id: 'mattina', label: 'Mattina (8-13)', short: '8-13' },
+            { id: 'pomeriggio', label: 'Pomeriggio (13-18)', short: '13-18' },
+            { id: 'giornata_intera', label: 'Giornata intera (8-18)', short: '8-18' }
+        ];
+
         const SPOTS = {
             ombrelloni: [
                 { id: 1, name: 'Ombrellone 1', icon: '&#9971;' },
@@ -137,12 +156,18 @@
         let bookings = [];
         let currentTab = 'ombrelloni';
         let selectedSpot = null;
+        let selectedSlot = null;
 
         function showToast(msg) {
             const t = document.getElementById('toast');
             t.textContent = msg;
             t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 2500);
+        }
+
+        function getSlotLabel(slotId) {
+            const s = SLOTS.find(s => s.id === slotId);
+            return s ? s.label : slotId;
         }
 
         async function api(url, opts = {}) {
@@ -166,21 +191,36 @@
             return start1 <= end2 && end1 >= start2;
         }
 
-        function getSpotStatus(type, spotId, rangeStart, rangeEnd) {
-            if (!rangeStart || !rangeEnd) return 'available';
-            const spotBookings = bookings.filter(b => b.type === type && b.spot === spotId);
+        function getBookingsForSpotAndDate(type, spotId, date) {
+            return bookings.filter(b => {
+                if (b.type !== type || b.spot !== spotId) return false;
+                if (b.date === date) return true;
+                if (b.startDate && b.endDate) {
+                    return date >= b.startDate && date <= b.endDate;
+                }
+                return false;
+            });
+        }
+
+        function getSlotStatus(date, type, spotId, slot) {
+            if (!date) return 'available';
+            const spotBookings = getBookingsForSpotAndDate(type, spotId, date);
             if (spotBookings.length === 0) return 'available';
 
-            const allOverlapping = spotBookings.every(b => isOverlapping(b.startDate, b.endDate, rangeStart, rangeEnd));
-            const anyOverlapping = spotBookings.some(b => isOverlapping(b.startDate, b.endDate, rangeStart, rangeEnd));
-
-            if (allOverlapping && spotBookings.length > 0) return 'booked';
-            if (anyOverlapping) return 'partial';
+            for (const b of spotBookings) {
+                if (b.slot === 'giornata_intera') return 'booked';
+                if (b.slot === slot) return 'booked';
+                if (!b.slot && b.startDate && b.endDate) return 'booked';
+            }
             return 'available';
         }
 
-        function getBookingsForSpot(type, spotId) {
-            return bookings.filter(b => b.type === type && b.spot === spotId);
+        function getSlotDots(date, type, spotId) {
+            return SLOTS.map(slot => {
+                const status = getSlotStatus(date, type, spotId, slot.id);
+                const cls = status === 'booked' ? 'taken' : 'free';
+                return `<span class="slot-dot ${cls}">${slot.short}</span>`;
+            }).join('');
         }
 
         function switchTab(tab) {
@@ -198,20 +238,21 @@
         }
 
         function selectSpot(type, spotId) {
-            const rangeStart = document.getElementById('filterStart').value;
-            const rangeEnd = document.getElementById('filterEnd').value;
-            if (!rangeStart || !rangeEnd) {
-                showToast('Seleziona le date per verificare la disponibilità');
+            const date = document.getElementById('filterDate').value;
+            const slot = document.getElementById('filterSlot').value;
+            if (!date) {
+                showToast('Seleziona una data per verificare la disponibilità');
                 return;
             }
-            const status = getSpotStatus(type, spotId, rangeStart, rangeEnd);
+            const status = getSlotStatus(date, type, spotId, slot);
             if (status === 'booked') {
-                showToast('Questo posto non è disponibile nel periodo selezionato');
+                showToast('Questo posto non è disponibile per la data/fascia selezionata');
                 return;
             }
             selectedSpot = { type, spotId };
-            document.getElementById('bookStart').value = rangeStart;
-            document.getElementById('bookEnd').value = rangeEnd;
+            selectedSlot = slot;
+            document.getElementById('bookDate').value = date;
+            document.getElementById('bookSlot').value = slot;
             updateSelectedSpotInfo();
             renderSpots();
         }
@@ -227,23 +268,24 @@
             }
             const list = SPOTS[selectedSpot.type];
             const spot = list.find(s => s.id === selectedSpot.spotId);
+            const slotLabel = getSlotLabel(selectedSlot);
             if (spot) {
-                info.innerHTML = `Selezionato: <strong>${spot.icon} ${spot.name}</strong>`;
+                info.innerHTML = `Selezionato: <strong>${spot.icon} ${spot.name}</strong> — <strong>${slotLabel}</strong>`;
                 btn.disabled = false;
             }
         }
 
         function renderSpots() {
             const container = document.getElementById('spotsContainer');
-            const rangeStart = document.getElementById('filterStart').value;
-            const rangeEnd = document.getElementById('filterEnd').value;
+            const date = document.getElementById('filterDate').value;
+            const slot = document.getElementById('filterSlot').value;
             const list = SPOTS[currentTab];
 
             let html = '';
             list.forEach(spot => {
-                const status = getSpotStatus(currentTab, spot.id, rangeStart, rangeEnd);
+                const status = getSlotStatus(date, currentTab, spot.id, slot);
                 const isSelected = selectedSpot && selectedSpot.type === currentTab && selectedSpot.spotId === spot.id;
-                const spotBookings = getBookingsForSpot(currentTab, spot.id);
+                const dots = getSlotDots(date, currentTab, spot.id);
 
                 let statusLabel = 'Disponibile';
                 if (status === 'booked') statusLabel = 'Occupato';
@@ -253,8 +295,8 @@
                     <div class="spot-card ${status} ${isSelected ? 'selected' : ''}" onclick="selectSpot('${currentTab}', ${spot.id})">
                         <div class="icon">${spot.icon}</div>
                         <div class="name">${spot.name}</div>
+                        <div class="slot-dots">${dots}</div>
                         <div class="status">${statusLabel}</div>
-                        ${spotBookings.length > 0 ? `<small style="color:#666;display:block;margin-top:4px;font-size:0.7rem;">${spotBookings.length} prenotaz.</small>` : ''}
                     </div>
                 `;
             });
@@ -275,16 +317,15 @@
             }
             const name = document.getElementById('clientName').value.trim();
             const phone = document.getElementById('clientPhone').value.trim();
-            const start = document.getElementById('bookStart').value;
-            const end = document.getElementById('bookEnd').value;
+            const date = document.getElementById('bookDate').value;
+            const slot = document.getElementById('bookSlot').value;
 
             if (!name) { showToast('Inserisci nome e cognome'); return; }
-            if (!start || !end) { showToast('Seleziona le date'); return; }
-            if (start > end) { showToast('La data fine deve essere dopo la data inizio'); return; }
+            if (!date) { showToast('Seleziona la data'); return; }
 
-            const status = getSpotStatus(selectedSpot.type, selectedSpot.spotId, start, end);
+            const status = getSlotStatus(date, selectedSpot.type, selectedSpot.spotId, slot);
             if (status === 'booked') {
-                showToast('Questo posto non è disponibile in questo periodo');
+                showToast('Questo posto non è disponibile in questa data/fascia');
                 return;
             }
 
@@ -295,13 +336,14 @@
                     spot: selectedSpot.spotId,
                     clientName: name,
                     clientPhone: phone,
-                    startDate: start,
-                    endDate: end
+                    date: date,
+                    slot: slot
                 })
             });
 
             if (result.success) {
-                showToast(`&#9989; ${selectedSpot.type === 'ombrelloni' ? 'Ombrellone' : 'Gazebo'} ${selectedSpot.spotId} prenotato!`);
+                const slotLabel = getSlotLabel(slot);
+                showToast(`&#9989; ${selectedSpot.type === 'ombrelloni' ? 'Ombrellone' : 'Gazebo'} ${selectedSpot.spotId} prenotato! ${slotLabel}`);
                 document.getElementById('clientName').value = '';
                 document.getElementById('clientPhone').value = '';
                 selectedSpot = null;
@@ -332,13 +374,24 @@
             let html = '';
             sorted.forEach(b => {
                 const typeLabel = b.type === 'ombrelloni' ? '&#9971; Ombrellone' : '&#9962; Gazebo';
+
+                let dateInfo;
+                if (b.date && b.slot) {
+                    const slotLabel = getSlotLabel(b.slot);
+                    dateInfo = `${b.date} — ${slotLabel}`;
+                } else if (b.startDate && b.endDate) {
+                    dateInfo = `${b.startDate} &rarr; ${b.endDate} (legacy)`;
+                } else {
+                    dateInfo = '—';
+                }
+
                 html += `
                     <div class="booking-item">
                         <div class="info">
                             <strong>${typeLabel} ${b.spot}</strong> - ${b.clientName} ${b.clientPhone ? '<small>Tel: ' + b.clientPhone + '</small>' : ''}
                             <small>Prenotato il ${new Date(b.timestamp).toLocaleDateString('it-IT')}</small>
                         </div>
-                        <div class="dates">${b.startDate} &rarr; ${b.endDate}</div>
+                        <div class="dates">${dateInfo}</div>
                         <button class="del-btn" onclick="deleteBooking('${b.id}')">&#10005;</button>
                     </div>
                 `;
@@ -346,17 +399,12 @@
             container.innerHTML = html;
         }
 
-        document.getElementById('filterStart').addEventListener('change', checkAvailability);
-        document.getElementById('filterEnd').addEventListener('change', checkAvailability);
+        document.getElementById('filterDate').addEventListener('change', checkAvailability);
+        document.getElementById('filterSlot').addEventListener('change', checkAvailability);
 
         const today = new Date().toISOString().split('T')[0];
-        const future = new Date();
-        future.setDate(future.getDate() + 30);
-        const futureStr = future.toISOString().split('T')[0];
-        document.getElementById('filterStart').value = today;
-        document.getElementById('filterEnd').value = futureStr;
-        document.getElementById('bookStart').value = today;
-        document.getElementById('bookEnd').value = futureStr;
+        document.getElementById('filterDate').value = today;
+        document.getElementById('bookDate').value = today;
 
         loadBookings();
     </script>

@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: tenuta-san-nicola
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/status
+    envVars:
+      - key: PORT
+        value: 3000
