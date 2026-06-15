@@ -223,9 +223,9 @@
             try {
                 const data = await api('/api/bookings');
                 if (Array.isArray(data)) bookings = data;
-                renderResoconto();
                 renderSpots();
                 renderBookings();
+                document.getElementById('resoconto').classList.remove('show');
             } catch (e) {
                 document.getElementById('bookingsContainer').innerHTML = '<p style="text-align:center;color:#D95A2B;margin:20px 0;">Errore caricamento prenotazioni</p>';
             }
@@ -397,28 +397,45 @@
                 <div class="periodo">${formatDate(start)} &rarr; ${formatDate(end)} &middot; ${durata} &middot; ${slotLabel}</div>
             `;
 
+            function getSpotDetail(type, spotId) {
+                const dates = getDatesInRange(start, end);
+                const slotNames = { mattina: 'Mattina', pomeriggio: 'Pomeriggio', giornata_intera: 'Tutto il giorno' };
+                const presi = [];
+
+                dates.forEach(date => {
+                    const dayBookings = getDayBookings(date, type, spotId);
+                    dayBookings.forEach(b => {
+                        const label = slotNames[b.slot] || b.slot;
+                        if (!presi.includes(label)) presi.push(label);
+                    });
+                });
+
+                return presi;
+            }
+
             ['ombrelloni', 'gazebo'].forEach(tipo => {
                 const list = SPOTS[tipo];
                 const label = tipo === 'ombrelloni' ? '&#9971; Ombrelloni' : '&#9962; Gazebo';
                 const disponibili = [];
-                const parziali = [];
                 const occupati = [];
 
                 list.forEach(spot => {
                     const r = getRangeStatus(start, end, tipo, spot.id, slot);
-                    if (r.status === 'available') disponibili.push(spot.name);
-                    else if (r.status === 'booked') occupati.push(spot.name);
-                    else parziali.push(spot.name);
+                    const dettaglio = getSpotDetail(tipo, spot.id);
+                    if (r.status === 'available') {
+                        disponibili.push(spot.name);
+                    } else {
+                        const info = dettaglio.length > 0 ? ` (${dettaglio.join(', ')})` : '';
+                        occupati.push(`${spot.name}${info}`);
+                    }
                 });
 
                 let gruppoHtml = `<div class="gruppo"><h4>${label}</h4><div class="stat">`;
                 if (disponibili.length > 0) gruppoHtml += `<span class="badge verde">&#9989; ${disponibili.length} disponibili</span>`;
-                if (parziali.length > 0) gruppoHtml += `<span class="badge arancione">&#128993; ${parziali.length} parziali</span>`;
                 if (occupati.length > 0) gruppoHtml += `<span class="badge rosso">&#10060; ${occupati.length} occupati</span>`;
                 gruppoHtml += `</div>`;
 
                 if (disponibili.length > 0) gruppoHtml += `<div class="elenco">Liberi: ${disponibili.join(', ')}</div>`;
-                if (parziali.length > 0) gruppoHtml += `<div class="elenco">Parziali: ${parziali.join(', ')}</div>`;
                 if (occupati.length > 0) gruppoHtml += `<div class="elenco">Occupati: ${occupati.join(', ')}</div>`;
                 gruppoHtml += `</div>`;
 
