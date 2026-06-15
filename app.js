@@ -440,7 +440,10 @@ function renderBarDashboard() {
     const container = document.getElementById('barOrdersList');
     if (!container) return;
 
-    const activeOrders = orders.filter(o => !o.delivered && o.status.bevanda !== null && o.status.bevanda !== 'delivered');
+    const activeOrders = orders.filter(o => !o.delivered && (
+        (o.status.bevanda !== null && o.status.bevanda !== 'delivered') ||
+        (o.status.cibo !== null && o.status.cibo !== 'delivered')
+    ));
     renderStaffOrders(container, activeOrders, 'bar');
 }
 
@@ -463,53 +466,79 @@ function renderStaffOrders(container, activeOrders, staffRole) {
         const date = new Date(order.timestamp);
         const isKitchen = staffRole === 'kitchen';
 
-        const relevantItems = order.items.filter(i => isKitchen ? i.type === 'cibo' : i.type === 'bevanda');
-        const otherItems = order.items.filter(i => isKitchen ? i.type === 'bevanda' : i.type === 'cibo');
+        const foodItems = order.items.filter(i => i.type === 'cibo');
+        const drinkItems = order.items.filter(i => i.type === 'bevanda');
 
-        const statusKey = isKitchen ? 'cibo' : 'bevanda';
-        const currentStatus = order.status[statusKey];
-        const isReady = currentStatus === 'ready';
+        if (isKitchen) {
+            const foodStatus = order.status.cibo;
+            let statusHtml = foodStatus === 'pending'
+                ? `<span class="status-badge status-food-pending">In preparazione</span>`
+                : `<span class="status-badge status-food-ready">Pronto</span>`;
 
-        let statusHtml = '';
-        if (currentStatus === 'pending') {
-            statusHtml = `<span class="status-badge status-${statusKey}-pending">In attesa</span>`;
-        } else if (currentStatus === 'ready') {
-            statusHtml = `<span class="status-badge status-${statusKey}-ready">Pronto</span>`;
-        }
+            let actionHtml = foodStatus === 'pending'
+                ? `<button class="staff-btn btn-ready" onclick="markReady('${order.id}', 'cibo')">✅ Pronto</button>`
+                : '';
 
-        let actionBtn = '';
-        if (currentStatus === 'pending') {
-            actionBtn = `<button class="staff-btn btn-ready" onclick="markReady('${order.id}', '${statusKey}')">\u2705 Pronto</button>`;
-        }
+            html += `
+                <div class="order-card ${foodStatus === 'ready' ? 'kitchen-ready' : ''}">
+                    <h4>#${order.id.toUpperCase()} - ${getRoomName(order.room)}</h4>
+                    <div class="order-meta" style="font-size:0.8rem;color:#666;margin-bottom:8px;">
+                        ${date.toLocaleDateString('it-IT')} ${date.toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'})}
+                        ${order.time ? `- Orario: ${order.time}` : ''}
+                    </div>
+                    <div class="order-items">
+                        <strong>🍽️ Cibo:</strong><br>
+                        ${foodItems.map(i => `${i.img} ${i.name} x${i.qty} - €${(i.price * i.qty).toFixed(2)}`).join('<br>')}
+                        ${drinkItems.length > 0 ? `<br><small style="color:#999;">Il bar prepara: ${drinkItems.map(i => `${i.name} x${i.qty}`).join(', ')}</small>` : ''}
+                    </div>
+                    <div class="order-status">${statusHtml}</div>
+                    <div>${actionHtml}</div>
+                </div>
+            `;
+        } else {
+            const drinkStatus = order.status.bevanda;
+            const foodStatus = order.status.cibo;
 
-        let deliverBtn = '';
-        if (isReady) {
-            const allDone = isKitchen
-                ? (order.status.bevanda === 'ready' || order.status.bevanda === null || order.status.bevanda === 'delivered')
-                : (order.status.cibo === 'ready' || order.status.cibo === null || order.status.cibo === 'delivered');
-            if (allDone) {
-                deliverBtn = `<button class="staff-btn btn-deliver" onclick="markDelivered('${order.id}')">\uD83D\uDEE5\uFE0F Consegnato</button>`;
-            } else {
-                deliverBtn = `<button class="staff-btn btn-disabled">Attendi altro reparto</button>`;
+            let statusHtml = '';
+            let actionHtml = '';
+
+            if (drinkStatus === 'pending') {
+                statusHtml += `<span class="status-badge status-drinks-pending">Bevande in attesa</span>`;
+                actionHtml += `<button class="staff-btn btn-ready" onclick="markReady('${order.id}', 'bevanda')">✅ Bevande pronte</button>`;
+            } else if (drinkStatus === 'ready') {
+                statusHtml += `<span class="status-badge status-drinks-ready">Bevande pronte</span>`;
             }
-        }
 
-        html += `
-            <div class="order-card ${isKitchen && isReady ? 'kitchen-ready' : ''}">
-                <h4>#${order.id.toUpperCase()} - ${getRoomName(order.room)}</h4>
-                <div class="order-meta" style="font-size:0.8rem;color:#666;margin-bottom:8px;">
-                    ${date.toLocaleDateString('it-IT')} ${date.toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'})}
-                    ${order.time ? `- Orario: ${order.time}` : ''}
+            if (foodStatus === 'pending') {
+                statusHtml += `<span class="status-badge status-food-pending">Cibo in preparazione</span>`;
+            } else if (foodStatus === 'ready') {
+                statusHtml += `<span class="status-badge status-food-ready">Cibo pronto</span>`;
+            }
+
+            const foodReady = foodStatus === 'ready' || foodStatus === null || foodStatus === 'delivered';
+            const drinksReady = drinkStatus === 'ready' || drinkStatus === null || drinkStatus === 'delivered';
+
+            if (foodReady && drinksReady) {
+                actionHtml += `<button class="staff-btn btn-deliver" onclick="markDelivered('${order.id}')">🚚 Consegnato</button>`;
+            }
+
+            html += `
+                <div class="order-card">
+                    <h4>#${order.id.toUpperCase()} - ${getRoomName(order.room)}</h4>
+                    <div class="order-meta" style="font-size:0.8rem;color:#666;margin-bottom:8px;">
+                        ${date.toLocaleDateString('it-IT')} ${date.toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'})}
+                        ${order.time ? `- Orario: ${order.time}` : ''}
+                    </div>
+                    <div class="order-items">
+                        <strong>🍺 Bevande:</strong><br>
+                        ${drinkItems.map(i => `${i.img} ${i.name} x${i.qty} - €${(i.price * i.qty).toFixed(2)}`).join('<br>')}
+                        ${foodItems.length > 0 ? `<br><strong style="color:#D95A2B;">🍽️ Cibo da prendere in cucina:</strong><br>${foodItems.map(i => `${i.img} ${i.name} x${i.qty}`).join('<br>')}` : ''}
+                    </div>
+                    <div class="order-status">${statusHtml}</div>
+                    <div>${actionHtml}</div>
                 </div>
-                <div class="order-items">
-                    <strong>${isKitchen ? '\uD83C\uDF7D\uFE0F Cibo' : '\uD83C\uDF7A Bevande'}:</strong><br>
-                    ${relevantItems.map(i => `${i.img} ${i.name} x${i.qty} - \u20AC${(i.price * i.qty).toFixed(2)}`).join('<br>')}
-                    ${otherItems.length > 0 ? `<br><small style="color:#999;">Altro reparto: ${otherItems.map(i => `${i.name} x${i.qty}`).join(', ')}</small>` : ''}
-                </div>
-                <div class="order-status">${statusHtml}</div>
-                <div>${actionBtn} ${deliverBtn}</div>
-            </div>
-        `;
+            `;
+        }
     });
     container.innerHTML = html;
 }
@@ -532,8 +561,9 @@ function markDelivered(orderId) {
         order.status.cibo = order.status.cibo === 'ready' ? 'delivered' : order.status.cibo;
         order.status.bevanda = order.status.bevanda === 'ready' ? 'delivered' : order.status.bevanda;
         apiPut(`/api/orders/${orderId}`, { delivered: true, status: order.status });
-        if (currentRole === 'bar') renderBarDashboard();
-        if (currentRole === 'kitchen') renderKitchenDashboard();
+        renderBarDashboard();
+        renderKitchenDashboard();
+        if (currentRole === 'reception') renderReceptionDashboard();
         showToast(`\uD83D\uDEE5\uFE0F Ordine #${orderId.toUpperCase()} consegnato`);
     }
 }
@@ -602,6 +632,15 @@ function renderReceptionDashboard() {
 
     container.innerHTML = html;
     document.getElementById('totalDaIncassare').textContent = grandTotal.toFixed(2);
+
+    if (unpaidOrders.length > 0) {
+        const pdfBtn = document.createElement('button');
+        pdfBtn.className = 'submit-order-btn';
+        pdfBtn.style.cssText = 'background:#C9A87C;margin-top:15px;font-size:0.9rem;padding:10px;';
+        pdfBtn.innerHTML = '\uD83D\uDCC4 Scarica PDF comande';
+        pdfBtn.onclick = printOrdersPDF;
+        container.appendChild(pdfBtn);
+    }
 }
 
 function markRoomAsPaid(room) {
@@ -776,6 +815,86 @@ async function initApp() {
             document.getElementById('roomBadge').textContent = `${getRoomName(currentRoom)}`;
         }
     }
+}
+
+function printOrdersPDF() {
+    const unpaid = orders.filter(o => o.delivered && !o.paid);
+    const paid = orders.filter(o => o.paid);
+    const all = [...unpaid, ...paid];
+
+    if (all.length === 0) {
+        showToast('Nessun ordine da stampare');
+        return;
+    }
+
+    const roomGroups = {};
+    all.forEach(order => {
+        if (!roomGroups[order.room]) roomGroups[order.room] = [];
+        roomGroups[order.room].push(order);
+    });
+
+    let html = `
+        <!DOCTYPE html>
+        <html><head><meta charset="UTF-8"><title>Comande TENUTA SAN NICOLA</title>
+        <style>
+            body { font-family: monospace; font-size: 12px; padding: 20px; color: #333; }
+            h1 { text-align: center; font-size: 18px; color: #2E5A3B; margin-bottom: 5px; }
+            h2 { font-size: 14px; color: #2E5A3B; margin-top: 20px; border-bottom: 2px solid #C9A87C; padding-bottom: 4px; }
+            .data { text-align: center; font-size: 11px; color: #666; margin-bottom: 20px; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+            th, td { padding: 4px 6px; text-align: left; border-bottom: 1px solid #eee; font-size: 11px; }
+            th { background: #F5F2E8; font-weight: bold; }
+            .totale { text-align: right; font-weight: bold; font-size: 13px; margin-top: 5px; padding-top: 5px; border-top: 2px solid #333; }
+            .stato { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; margin-left: 5px; }
+            .da-pagare { background: #FFCDD2; }
+            .pagato { background: #C8E6C9; }
+            .footer { text-align: center; font-size: 10px; color: #999; margin-top: 30px; border-top: 1px solid #ddd; padding-top: 10px; }
+            @media print { body { padding: 10px; } }
+        </style></head><body>
+        <h1>&#127795; TENUTA SAN NICOLA</h1>
+        <div class="data">Report comande - ${new Date().toLocaleDateString('it-IT')} ${new Date().toLocaleTimeString('it-IT', {hour:'2-digit',minute:'2-digit'})}</div>
+    `;
+
+    Object.keys(roomGroups).sort((a, b) => a - b).forEach(room => {
+        const roomOrders = roomGroups[room];
+        let roomTotal = 0;
+        html += `<h2>&#127968; ${getRoomName(parseInt(room))}</h2><table><tr><th>#</th><th>Articolo</th><th>Q.tà</th><th>Prezzo</th><th>Totale</th><th>Stato</th></tr>`;
+
+        roomOrders.forEach(order => {
+            const orderTotal = order.items.reduce((s, i) => s + i.price * i.qty, 0);
+            roomTotal += orderTotal;
+            const stato = order.paid ? '<span class="stato pagato">Pagato</span>' : '<span class="stato da-pagare">Da pagare</span>';
+
+            order.items.forEach((item, idx) => {
+                const itemTotal = item.price * item.qty;
+                html += `<tr>
+                    <td>${idx === 0 ? '#' + order.id.toUpperCase() : ''}</td>
+                    <td>${item.img} ${item.name}</td>
+                    <td>${item.qty}</td>
+                    <td>€${item.price.toFixed(2)}</td>
+                    <td>€${itemTotal.toFixed(2)}</td>
+                    <td>${idx === 0 ? stato : ''}</td>
+                </tr>`;
+            });
+
+            const date = new Date(order.timestamp);
+            html += `<tr style="background:#F9F7F2;"><td colspan="6" style="font-size:10px;color:#999;text-align:right;">
+                ${date.toLocaleDateString('it-IT')} ${date.toLocaleTimeString('it-IT', {hour:'2-digit',minute:'2-digit'})}
+                ${order.time ? ' - Orario: ' + order.time : ''}
+            </td></tr>`;
+        });
+
+        html += `</table><div class="totale">Totale stanza: €${roomTotal.toFixed(2)}</div>`;
+    });
+
+    const grandTotal = all.reduce((s, o) => s + o.items.reduce((s2, i) => s2 + i.price * i.qty, 0), 0);
+    html += `<div class="totale" style="font-size:16px;margin-top:20px;">TOTALE GENERALE: €${grandTotal.toFixed(2)}</div>`;
+    html += `<div class="footer">Documento generato il ${new Date().toLocaleString('it-IT')}</div></body></html>`;
+
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+    win.print();
 }
 
 const origSetRoom = setRoom;
