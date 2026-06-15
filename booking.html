@@ -307,6 +307,9 @@
                 showToast('Questo posto non è disponibile in questo periodo per questa fascia');
                 return;
             }
+            if (r.status === 'partial') {
+                showToast(`Attenzione: ${r.free}/${r.total} giorni liberi, ${r.total - r.free} giorno/i già occupato/i`);
+            }
             selectedSpot = { type, spotId };
             selectedSlot = slot;
             document.getElementById('bookStart').value = start;
@@ -449,10 +452,12 @@
             if (!start || !end) { showToast('Seleziona le date'); return; }
             if (start > end) { showToast('La data fine deve essere dopo la data inizio'); return; }
 
-            const r = getRangeStatus(start, end, selectedSpot.type, selectedSpot.spotId, slot);
-            if (r.status === 'booked') {
-                showToast('Questo posto non è disponibile in questo periodo per questa fascia');
-                return;
+            const dates = getDatesInRange(start, end);
+            for (const date of dates) {
+                if (isDaySlotBooked(date, selectedSpot.type, selectedSpot.spotId, slot)) {
+                    showToast(`Il ${formatDate(date)} è già prenotato per ${getSlotLabel(slot)}. Scegli un altro periodo.`);
+                    return;
+                }
             }
 
             const result = await api('/api/bookings', {
