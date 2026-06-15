@@ -15,9 +15,7 @@
         .date-filters { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; }
         .date-filters label { font-size: 0.85rem; font-weight: bold; color: #2E5A3B; }
         .date-filters input[type="date"], .date-filters select { padding: 8px; border: 1px solid #C9A87C; border-radius: 8px; font-size: 0.9rem; flex: 1; min-width: 120px; }
-        .date-filters .quick-btns { display: flex; gap: 6px; flex-wrap: wrap; }
-        .date-filters .quick-btn { padding: 6px 12px; border: 1px solid #C9A87C; border-radius: 8px; background: white; cursor: pointer; font-size: 0.8rem; font-weight: bold; color: #2E5A3B; }
-        .date-filters .quick-btn.active { background: #C9A87C; color: white; border-color: #C9A87C; }
+
         .legend { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
         .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; }
         .legend-color { width: 16px; height: 16px; border-radius: 4px; }
@@ -89,14 +87,9 @@
             <select id="filterSlot">
                 <option value="mattina">Mattina (8-13)</option>
                 <option value="pomeriggio">Pomeriggio (13-18)</option>
+                <option value="giornata_intera">Giornata intera (8-18)</option>
             </select>
-            <button onclick="checkAvailability()" style="padding:8px 16px;background:#2E5A3B;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:bold;">Verifica</button>
-            <div class="quick-btns">
-                <button class="quick-btn" onclick="setQuickRange(1)">1 Giorno</button>
-                <button class="quick-btn" onclick="setQuickRange(7)">1 Settimana</button>
-                <button class="quick-btn" onclick="setQuickRange(14)">2 Settimane</button>
-                <button class="quick-btn" onclick="setQuickRange(30)">1 Mese</button>
-            </div>
+            <button onclick="checkAvailability()" style="padding:8px 16px;background:#2E5A3B;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:bold;">Verifica disponibilità</button>
         </div>
 
         <div class="legend">
@@ -125,6 +118,7 @@
                 <select id="bookSlot">
                     <option value="mattina">Mattina (8-13)</option>
                     <option value="pomeriggio">Pomeriggio (13-18)</option>
+                    <option value="giornata_intera">Giornata intera (8-18)</option>
                 </select>
                 <button id="btnBook" onclick="createBooking()" disabled>Prenota</button>
             </div>
@@ -144,7 +138,8 @@
     <script>
         const SLOTS = [
             { id: 'mattina', label: 'Mattina (8-13)', short: '8-13' },
-            { id: 'pomeriggio', label: 'Pomeriggio (13-18)', short: '13-18' }
+            { id: 'pomeriggio', label: 'Pomeriggio (13-18)', short: '13-18' },
+            { id: 'giornata_intera', label: 'Giornata intera (8-18)', short: '8-18' }
         ];
 
         const SPOTS = {
@@ -235,6 +230,7 @@
         function isDaySlotBooked(date, type, spotId, slot) {
             const dayBookings = getDayBookings(date, type, spotId);
             for (const b of dayBookings) {
+                if (b.slot === 'giornata_intera') return true;
                 if (b.slot === slot) return true;
             }
             return false;
@@ -263,25 +259,6 @@
                 else cls = 'partial-slot';
                 return `<span class="slot-dot ${cls}" title="${slot.label}: ${r.free}/${r.total} giorni">${slot.short}</span>`;
             }).join('');
-        }
-
-        function setQuickRange(days) {
-            const start = document.getElementById('filterStart').value;
-            if (!start) {
-                const today = new Date();
-                const startStr = today.toISOString().split('T')[0];
-                document.getElementById('filterStart').value = startStr;
-                const end = new Date(today);
-                end.setDate(end.getDate() + days - 1);
-                document.getElementById('filterEnd').value = end.toISOString().split('T')[0];
-            } else {
-                const end = new Date(start + 'T00:00:00');
-                end.setDate(end.getDate() + days - 1);
-                document.getElementById('filterEnd').value = end.toISOString().split('T')[0];
-            }
-            document.querySelectorAll('.quick-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            checkAvailability();
         }
 
         function switchTab(tab) {
