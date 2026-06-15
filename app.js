@@ -344,6 +344,13 @@ function isOpenNow(type) {
     return slots.some(slot => isTimeInRange(timeStr, slot.start, slot.end));
 }
 
+function isTimeOpen(type, timeStr) {
+    if (!menu.config || !menu.config.openingHours || !menu.config.openingHours[type]) return true;
+    const slots = menu.config.openingHours[type];
+    if (!slots || slots.length === 0) return true;
+    return slots.some(slot => isTimeInRange(timeStr, slot.start, slot.end));
+}
+
 async function submitOrder() {
     if (cart.length === 0) {
         showToast('Carrello vuoto');
@@ -357,16 +364,23 @@ async function submitOrder() {
     const hasFood = cart.some(i => i.type === 'cibo');
     const hasDrinks = cart.some(i => i.type === 'bevanda');
 
-    if (hasFood && !isOpenNow('ristorante')) {
-        showToast('Il ristorante è chiuso in questo momento');
-        return;
-    }
-    if (hasDrinks && !isOpenNow('bar')) {
-        showToast('Il bar è chiuso in questo momento');
-        return;
-    }
-
     const orderTime = document.getElementById('orderTime').value || 'Orario libero';
+
+    if (hasFood && !isTimeOpen('ristorante', orderTime)) {
+        showToast('Il ristorante è chiuso all\'orario selezionato');
+        return;
+    }
+    if (hasDrinks) {
+        if (orderTime === 'Orario libero') {
+            if (!isOpenNow('bar')) {
+                showToast('Il bar è chiuso in questo momento');
+                return;
+            }
+        } else if (!isTimeOpen('bar', orderTime)) {
+            showToast('Il bar è chiuso all\'orario selezionato');
+            return;
+        }
+    }
 
     const order = {
         id: Date.now().toString(36) + Math.random().toString(36).substr(2, 3),
