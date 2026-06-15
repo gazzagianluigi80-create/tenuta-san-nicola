@@ -64,6 +64,18 @@
         .tab-bar button { flex: 1; padding: 10px; border: 2px solid #C9A87C; background: white; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
         .tab-bar button.active { background: #C9A87C; color: #2E5A3B; }
         .duration-label { font-size: 0.8rem; color: #2E5A3B; font-weight: bold; background: #F9F7F2; padding: 6px 12px; border-radius: 8px; display: inline-block; margin: 8px 0; }
+        .resoconto { background: white; border-radius: 15px; padding: 20px; margin-bottom: 20px; display: none; }
+        .resoconto.show { display: block; }
+        .resoconto h3 { color: #2E5A3B; margin-bottom: 12px; font-size: 1.1rem; }
+        .resoconto .periodo { font-size: 0.85rem; color: #666; margin-bottom: 15px; }
+        .resoconto .gruppo { margin-bottom: 15px; }
+        .resoconto .gruppo h4 { font-size: 0.95rem; color: #2E5A3B; margin-bottom: 8px; }
+        .resoconto .stat { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+        .resoconto .stat .badge { padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
+        .resoconto .stat .badge.verde { background: #C8E6C9; color: #2E7D32; }
+        .resoconto .stat .badge.arancione { background: #FFE0B2; color: #E65100; }
+        .resoconto .stat .badge.rosso { background: #FFCDD2; color: #C62828; }
+        .resoconto .elenco { font-size: 0.8rem; color: #555; margin-top: 4px; }
         @media (max-width: 600px) {
             .spots-grid { grid-template-columns: repeat(2, 1fr); }
         }
@@ -97,6 +109,8 @@
             <div class="legend-item"><div class="legend-color partial"></div> Parziale</div>
             <div class="legend-item"><div class="legend-color booked"></div> Occupato</div>
         </div>
+
+        <div id="resoconto" class="resoconto"></div>
 
         <div class="tab-bar">
             <button class="active" onclick="switchTab('ombrelloni')">&#9971; Ombrelloni</button>
@@ -209,6 +223,7 @@
             try {
                 const data = await api('/api/bookings');
                 if (Array.isArray(data)) bookings = data;
+                renderResoconto();
                 renderSpots();
                 renderBookings();
             } catch (e) {
@@ -359,9 +374,62 @@
             container.innerHTML = html;
         }
 
+        function renderResoconto() {
+            const container = document.getElementById('resoconto');
+            const start = document.getElementById('filterStart').value;
+            const end = document.getElementById('filterEnd').value;
+            const slot = document.getElementById('filterSlot').value;
+
+            if (!start || !end) {
+                container.classList.remove('show');
+                return;
+            }
+
+            const slotLabel = getSlotLabel(slot);
+            const giorni = daysBetween(start, end);
+            const durata = giorni === 1 ? '1 giorno' : `${giorni} giorni`;
+
+            let html = `
+                <h3>&#128202; Resoconto disponibilità</h3>
+                <div class="periodo">${formatDate(start)} &rarr; ${formatDate(end)} &middot; ${durata} &middot; ${slotLabel}</div>
+            `;
+
+            ['ombrelloni', 'gazebo'].forEach(tipo => {
+                const list = SPOTS[tipo];
+                const label = tipo === 'ombrelloni' ? '&#9971; Ombrelloni' : '&#9962; Gazebo';
+                const disponibili = [];
+                const parziali = [];
+                const occupati = [];
+
+                list.forEach(spot => {
+                    const r = getRangeStatus(start, end, tipo, spot.id, slot);
+                    if (r.status === 'available') disponibili.push(spot.name);
+                    else if (r.status === 'booked') occupati.push(spot.name);
+                    else parziali.push(spot.name);
+                });
+
+                let gruppoHtml = `<div class="gruppo"><h4>${label}</h4><div class="stat">`;
+                if (disponibili.length > 0) gruppoHtml += `<span class="badge verde">&#9989; ${disponibili.length} disponibili</span>`;
+                if (parziali.length > 0) gruppoHtml += `<span class="badge arancione">&#128993; ${parziali.length} parziali</span>`;
+                if (occupati.length > 0) gruppoHtml += `<span class="badge rosso">&#10060; ${occupati.length} occupati</span>`;
+                gruppoHtml += `</div>`;
+
+                if (disponibili.length > 0) gruppoHtml += `<div class="elenco">Liberi: ${disponibili.join(', ')}</div>`;
+                if (parziali.length > 0) gruppoHtml += `<div class="elenco">Parziali: ${parziali.join(', ')}</div>`;
+                if (occupati.length > 0) gruppoHtml += `<div class="elenco">Occupati: ${occupati.join(', ')}</div>`;
+                gruppoHtml += `</div>`;
+
+                html += gruppoHtml;
+            });
+
+            container.innerHTML = html;
+            container.classList.add('show');
+        }
+
         async function checkAvailability() {
             selectedSpot = null;
             updateSelectedSpotInfo();
+            renderResoconto();
             renderSpots();
             renderBookings();
         }
