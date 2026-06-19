@@ -217,7 +217,18 @@ const ROOMS = [
   { id: 9, name: 'Mimosa' },
   { id: 10, name: 'Ulivo' },
   { id: 11, name: 'Melograno' },
-  { id: 12, name: "Fico d'india" }
+  { id: 12, name: "Fico d'india" },
+  { id: 13, name: 'Ombrellone 1' },
+  { id: 14, name: 'Ombrellone 2' },
+  { id: 15, name: 'Ombrellone 3' },
+  { id: 16, name: 'Ombrellone 4' },
+  { id: 17, name: 'Ombrellone 5' },
+  { id: 18, name: 'Ombrellone 6' },
+  { id: 19, name: 'Ombrellone 7' },
+  { id: 20, name: 'Ombrellone 8' },
+  { id: 21, name: 'Gazebo 1' },
+  { id: 22, name: 'Gazebo 2' },
+  { id: 23, name: 'Gazebo 3' }
 ];
 
 function getRoomName(id) {
@@ -228,9 +239,19 @@ function getRoomName(id) {
 function renderRoomButtons() {
   const container = document.getElementById('roomGrid');
   if (!container) return;
+
+  const groups = {
+    Stanze: ROOMS.filter(r => r.id <= 12),
+    Ombrelloni: ROOMS.filter(r => r.id >= 13 && r.id <= 20),
+    Gazebo: ROOMS.filter(r => r.id >= 21)
+  };
+
   let html = '';
-  ROOMS.forEach(r => {
-    html += `<button class="room-demo-btn" onclick="setRoom(${r.id})">${r.name}</button>`;
+  Object.entries(groups).forEach(([label, items]) => {
+    html += `<div style="grid-column:1/-1;font-size:0.75rem;font-weight:bold;color:#C9A87C;margin-top:6px;text-align:left;">${label}</div>`;
+    items.forEach(r => {
+      html += `<button class="room-demo-btn" onclick="setRoom(${r.id})">${r.name}</button>`;
+    });
   });
   container.innerHTML = html;
 }

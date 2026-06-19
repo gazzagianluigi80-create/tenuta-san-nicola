@@ -100,94 +100,71 @@
 
     <div class="grid" id="qrGrid"></div>
 
-    <h2 id="spotsTitle" style="text-align:center;color:#2E5A3B;margin:40px 0 20px;font-size:1.4rem;">&#9971; Ombrelloni & Gazebo — Prenotazioni</h2>
-    <div class="instructions" style="margin-bottom:20px;">
-        <p>Scansiona il QR code per prenotare direttamente il tuo ombrellone o gazebo.<br>
-        Ogni QR code apre la pagina di prenotazione con il posto già selezionato.</p>
-    </div>
-    <div class="grid" id="spotGrid"></div>
-
     <script>
-        const baseUrlRooms = window.location.origin + window.location.pathname.replace('qrcodes.html', 'index.html');
-        const baseUrlSpots = window.location.origin + window.location.pathname.replace('qrcodes.html', 'booking.html');
+        const baseUrl = window.location.origin + window.location.pathname.replace('qrcodes.html', 'index.html');
 
-        const ROOMS = [
-            { id: 1, name: 'Messapi' },
-            { id: 2, name: 'Greci' },
-            { id: 3, name: 'Bizantini' },
-            { id: 4, name: 'Camera delle rose' },
-            { id: 5, name: 'Romani' },
-            { id: 6, name: 'Borboni' },
-            { id: 7, name: 'Camera padronale' },
-            { id: 8, name: 'Pesco' },
-            { id: 9, name: 'Mimosa' },
-            { id: 10, name: 'Ulivo' },
-            { id: 11, name: 'Melograno' },
-            { id: 12, name: "Fico d'india" }
+        const ALL_ROOMS = [
+            { id: 1, name: 'Messapi', group: 'Stanza' },
+            { id: 2, name: 'Greci', group: 'Stanza' },
+            { id: 3, name: 'Bizantini', group: 'Stanza' },
+            { id: 4, name: 'Camera delle rose', group: 'Stanza' },
+            { id: 5, name: 'Romani', group: 'Stanza' },
+            { id: 6, name: 'Borboni', group: 'Stanza' },
+            { id: 7, name: 'Camera padronale', group: 'Stanza' },
+            { id: 8, name: 'Pesco', group: 'Stanza' },
+            { id: 9, name: 'Mimosa', group: 'Stanza' },
+            { id: 10, name: 'Ulivo', group: 'Stanza' },
+            { id: 11, name: 'Melograno', group: 'Stanza' },
+            { id: 12, name: "Fico d'india", group: 'Stanza' },
+            { id: 13, name: 'Ombrellone 1', group: 'Ombrellone' },
+            { id: 14, name: 'Ombrellone 2', group: 'Ombrellone' },
+            { id: 15, name: 'Ombrellone 3', group: 'Ombrellone' },
+            { id: 16, name: 'Ombrellone 4', group: 'Ombrellone' },
+            { id: 17, name: 'Ombrellone 5', group: 'Ombrellone' },
+            { id: 18, name: 'Ombrellone 6', group: 'Ombrellone' },
+            { id: 19, name: 'Ombrellone 7', group: 'Ombrellone' },
+            { id: 20, name: 'Ombrellone 8', group: 'Ombrellone' },
+            { id: 21, name: 'Gazebo 1', group: 'Gazebo' },
+            { id: 22, name: 'Gazebo 2', group: 'Gazebo' },
+            { id: 23, name: 'Gazebo 3', group: 'Gazebo' }
         ];
 
-        const OMBRELLONI = [
-            { id: 1, name: 'Ombrellone 1' },
-            { id: 2, name: 'Ombrellone 2' },
-            { id: 3, name: 'Ombrellone 3' },
-            { id: 4, name: 'Ombrellone 4' },
-            { id: 5, name: 'Ombrellone 5' },
-            { id: 6, name: 'Ombrellone 6' },
-            { id: 7, name: 'Ombrellone 7' },
-            { id: 8, name: 'Ombrellone 8' }
-        ];
+        const grid = document.getElementById('qrGrid');
 
-        const GAZEBO = [
-            { id: 1, name: 'Gazebo 1' },
-            { id: 2, name: 'Gazebo 2' },
-            { id: 3, name: 'Gazebo 3' }
-        ];
+        const groups = {};
+        ALL_ROOMS.forEach(r => {
+            if (!groups[r.group]) groups[r.group] = [];
+            groups[r.group].push(r);
+        });
 
-        function generateQRCodes(containerId, items, type, baseUrl) {
-            const grid = document.getElementById(containerId);
-            items.forEach(item => {
-                const url = baseUrl + '?type=' + type + '&id=' + item.id;
+        let index = 0;
+        Object.keys(groups).forEach(groupName => {
+            const items = groups[groupName];
+            const icon = groupName === 'Stanza' ? '&#127968;' : groupName === 'Ombrellone' ? '&#9971;' : '&#9962;';
+            const separator = document.createElement('div');
+            separator.style.cssText = 'grid-column:1/-1;text-align:center;font-size:1.3rem;font-weight:bold;color:#2E5A3B;padding:20px 0 5px;border-bottom:2px solid #C9A87C;margin-bottom:5px;';
+            separator.innerHTML = `${icon} ${groupName}${groupName === 'Stanza' ? 'e' : 'i'}`;
+            grid.appendChild(separator);
+
+            items.forEach(r => {
+                index++;
+                const url = baseUrl + '?room=' + r.id;
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
-                    <h2>${item.name}</h2>
-                    <div class="qr" id="qr_${type}_${item.id}"></div>
-                    <div class="label">${item.name}</div>
+                    <h2>${r.name}</h2>
+                    <div class="qr" id="qr_${index}"></div>
+                    <div class="label">${r.name}</div>
                     <div class="url">${url}</div>
                 `;
                 grid.appendChild(card);
             });
-            items.forEach(item => {
-                const url = baseUrl + '?type=' + type + '&id=' + item.id;
-                new QRCode(document.getElementById('qr_' + type + '_' + item.id), {
-                    text: url,
-                    width: 150,
-                    height: 150,
-                    colorDark: '#2E5A3B',
-                    colorLight: '#ffffff',
-                    correctLevel: QRCode.CorrectLevel.H
-                });
-            });
-        }
-
-        const gridRooms = document.getElementById('qrGrid');
-
-        ROOMS.forEach(r => {
-            const url = baseUrlRooms + '?room=' + r.id;
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <h2>${r.name}</h2>
-                <div class="qr" id="qr_${r.id}"></div>
-                <div class="label">${r.name}</div>
-                <div class="url">${url}</div>
-            `;
-            gridRooms.appendChild(card);
         });
 
-        ROOMS.forEach(r => {
-            const url = baseUrlRooms + '?room=' + r.id;
-            new QRCode(document.getElementById('qr_' + r.id), {
+        index = 0;
+        ALL_ROOMS.forEach((r, idx) => {
+            const url = baseUrl + '?room=' + r.id;
+            new QRCode(document.getElementById('qr_' + (idx + 1)), {
                 text: url,
                 width: 150,
                 height: 150,
@@ -196,9 +173,6 @@
                 correctLevel: QRCode.CorrectLevel.H
             });
         });
-
-        generateQRCodes('spotGrid', OMBRELLONI, 'ombrelloni', baseUrlSpots);
-        generateQRCodes('spotGrid', GAZEBO, 'gazebo', baseUrlSpots);
     </script>
 </body>
 </html>
