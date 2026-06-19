@@ -588,6 +588,9 @@
         document.getElementById('bookEnd').value = weekLaterStr;
 
         loadBookings();
+
+        // Aggiornamento automatico ogni 3 secondi
+        setInterval(loadBookings, 3000);
     </script>
 </body>
 </html>
