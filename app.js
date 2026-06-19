@@ -122,8 +122,7 @@ const LANG = {
     'Orario desiderato:': 'Horaire souhait\u00E9:',
     'Pranzo': 'D\u00E9jeuner',
     'Cena': 'D\u00EEner'
-  }
-},
+  },
 es: {
   aperto: '\u25CF Abierto',
   chiuso: '\u25CF Cerrado',
@@ -162,7 +161,7 @@ es: {
   'Orario desiderato:': 'Horario deseado:',
   'Pranzo': 'Almuerzo',
   'Cena': 'Cena'
-},
+}
   };
 
 function t(key) {
