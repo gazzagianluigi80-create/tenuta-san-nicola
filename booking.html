@@ -165,6 +165,11 @@
         let currentTab = 'ombrelloni';
         let selectedSpot = null;
 
+        function getUrlParam(name) {
+            const params = new URLSearchParams(window.location.search);
+            return params.get(name);
+        }
+
         function showToast(msg) {
             const t = document.getElementById('toast');
             t.textContent = msg;
@@ -525,7 +530,22 @@
         document.getElementById('bookStart').value = today;
         document.getElementById('bookEnd').value = weekLaterStr;
 
-        loadBookings();
+        loadBookings().then(() => {
+            const typeParam = getUrlParam('type');
+            const idParam = getUrlParam('id');
+            if (typeParam && idParam) {
+                const spotId = parseInt(idParam);
+                const validOmbrelloni = typeParam === 'ombrelloni' && spotId >= 1 && spotId <= 8;
+                const validGazebo = typeParam === 'gazebo' && spotId >= 1 && spotId <= 3;
+                if (validOmbrelloni || validGazebo) {
+                    switchTab(typeParam);
+                    setTimeout(() => {
+                        selectSpot(typeParam, spotId);
+                        document.getElementById('bookingForm').scrollIntoView({ behavior: 'smooth' });
+                    }, 300);
+                }
+            }
+        });
 
         // Aggiornamento automatico ogni 3 secondi
         setInterval(loadBookings, 3000);
