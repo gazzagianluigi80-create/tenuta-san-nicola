@@ -23,28 +23,44 @@
     "Antipasti": [
       {
         "name": "Burrata pugliese",
+        "nameEn": "Pugliese Burrata",
+        "nameFr": "Burrata des Pouilles",
         "desc": "Burrata cremosa, pomodorini confit, basilico",
+        "descEn": "Creamy burrata, confit cherry tomatoes, basil",
+        "descFr": "Burrata crémeuse, tomates cerises confites, basilic",
         "price": 12,
         "type": "cibo",
         "img": "🍽️"
       },
       {
         "name": "Caprese al cucchiaio",
+        "nameEn": "Spoon Caprese",
+        "nameFr": "Caprese à la cuillère",
         "desc": "Mozzarella, datterini, crema di basilico",
+        "descEn": "Mozzarella, cherry tomatoes, basil cream",
+        "descFr": "Mozzarella, tomates cerises, crème de basilic",
         "price": 10,
         "type": "cibo",
         "img": "🥗"
       },
       {
         "name": "Polpo alla griglia",
+        "nameEn": "Grilled Octopus",
+        "nameFr": "Poulpe grillé",
         "desc": "Polpo tenero, patate affumicate, salsa verde",
+        "descEn": "Tender octopus, smoked potatoes, green sauce",
+        "descFr": "Poulpe tendre, pommes fumées, sauce verte",
         "price": 16,
         "type": "cibo",
         "img": "🐙"
       },
       {
         "name": "Carpaccio di manzo",
+        "nameEn": "Beef Carpaccio",
+        "nameFr": "Carpaccio de bœuf",
         "desc": "Fassona, grana, rucola, lime",
+        "descEn": "Fassona beef, grana cheese, rocket, lime",
+        "descFr": "Bœuf Fassona, grana, roquette, lime",
         "price": 14,
         "type": "cibo",
         "img": "🥩"
@@ -53,28 +69,44 @@
     "Primi": [
       {
         "name": "Orecchiette cime di rapa",
+        "nameEn": "Orecchiette with Turnip Tops",
+        "nameFr": "Orecchiette aux feuilles de navet",
         "desc": "Orecchiette fresche, cime di rapa, acciughe",
+        "descEn": "Fresh orecchiette, turnip tops, anchovies",
+        "descFr": "Orecchiette fraîches, feuilles de navet, anchois",
         "price": 14,
         "type": "cibo",
         "img": "🍝"
       },
       {
         "name": "Risotto ai frutti di mare",
+        "nameEn": "Seafood Risotto",
+        "nameFr": "Risotto aux fruits de mer",
         "desc": "Risotto cremoso, frutti di mare misti",
+        "descEn": "Creamy risotto, mixed seafood",
+        "descFr": "Risotto crémeux, fruits de mer mélangés",
         "price": 22,
         "type": "cibo",
         "img": "🍚"
       },
       {
         "name": "Troccoli al sugo di braciola",
+        "nameEn": "Troccoli with Braised Pork Sauce",
+        "nameFr": "Troccoli à la sauce de braciole",
         "desc": "Troccoli fatti in casa, sugo di braciola",
+        "descEn": "Homemade troccoli, braised pork sauce",
+        "descFr": "Troccoli faits maison, sauce de braciole",
         "price": 16,
         "type": "cibo",
         "img": "🍝"
       },
       {
         "name": "Gnocchi allo scoglio",
+        "nameEn": "Seafood Gnocchi",
+        "nameFr": "Gnocchi aux fruits de mer",
         "desc": "Gnocchi di patate, frutti di mare",
+        "descEn": "Potato gnocchi, mixed seafood",
+        "descFr": "Gnocchi de pommes de terre, fruits de mer",
         "price": 20,
         "type": "cibo",
         "img": "🥔"
@@ -83,28 +115,44 @@
     "Secondi": [
       {
         "name": "Filetto di manzo",
+        "nameEn": "Beef Fillet",
+        "nameFr": "Filet de bœuf",
         "desc": "Filetto, riduzione al Barolo, rucola",
+        "descEn": "Beef fillet, Barolo wine reduction, rocket",
+        "descFr": "Filet de bœuf, réduction au Barolo, roquette",
         "price": 28,
         "type": "cibo",
         "img": "🥩"
       },
       {
         "name": "Grigliata di pesce",
+        "nameEn": "Mixed Grilled Fish",
+        "nameFr": "Poisson grillé mixte",
         "desc": "Orata, spigola, gamberi, calamari",
+        "descEn": "Sea bream, sea bass, prawns, calamari",
+        "descFr": "Dorade, bar, crevettes, calamars",
         "price": 32,
         "type": "cibo",
         "img": "🐟"
       },
       {
         "name": "Polpette di melanzane",
+        "nameEn": "Eggplant Meatballs",
+        "nameFr": "Boulettes d'aubergine",
         "desc": "Polpette di melanzane, pomodoro fresco, basilico",
+        "descEn": "Eggplant meatballs, fresh tomato, basil",
+        "descFr": "Boulettes d'aubergine, tomate fraîche, basilic",
         "price": 14,
         "type": "cibo",
         "img": "🍆"
       },
       {
         "name": "Tagliata di tonno",
+        "nameEn": "Seared Tuna",
+        "nameFr": "Thon saisi",
         "desc": "Tonno fresco scottato, sesamo, rucola",
+        "descEn": "Fresh seared tuna, sesame, rocket",
+        "descFr": "Thon frais saisi, sésame, roquette",
         "price": 26,
         "type": "cibo",
         "img": "🐟"
@@ -113,21 +161,33 @@
     "Contorni": [
       {
         "name": "Verdure grigliate",
+        "nameEn": "Grilled Vegetables",
+        "nameFr": "Légumes grillés",
         "desc": "Zucchine, melanzane, peperoni",
+        "descEn": "Zucchini, eggplant, bell peppers",
+        "descFr": "Courgettes, aubergines, poivrons",
         "price": 6,
         "type": "cibo",
         "img": "🥒"
       },
       {
         "name": "Patate al forno",
+        "nameEn": "Roasted Potatoes",
+        "nameFr": "Pommes au four",
         "desc": "Patate, rosmarino, aglio",
+        "descEn": "Potatoes, rosemary, garlic",
+        "descFr": "Pommes de terre, romarin, ail",
         "price": 5,
         "type": "cibo",
         "img": "🥔"
       },
       {
         "name": "Insalata mista",
+        "nameEn": "Mixed Salad",
+        "nameFr": "Salade mixte",
         "desc": "Lattuga, valeriana, pomodorini",
+        "descEn": "Lettuce, lamb's lettuce, cherry tomatoes",
+        "descFr": "Laitue, mâche, tomates cerises",
         "price": 5,
         "type": "cibo",
         "img": "🥗"
@@ -136,28 +196,44 @@
     "Dolci": [
       {
         "name": "Tiramisù classico",
+        "nameEn": "Classic Tiramisu",
+        "nameFr": "Tiramisu classique",
         "desc": "Caffè, savoiardi, mascarpone",
+        "descEn": "Coffee, ladyfingers, mascarpone",
+        "descFr": "Café, biscuits à la cuillère, mascarpone",
         "price": 6,
         "type": "cibo",
         "img": "🍰"
       },
       {
         "name": "Panna cotta al caramello",
+        "nameEn": "Caramel Panna Cotta",
+        "nameFr": "Panna cotta au caramel",
         "desc": "Panna cotta, caramello salato",
+        "descEn": "Panna cotta, salted caramel",
+        "descFr": "Panna cotta, caramel salé",
         "price": 6,
         "type": "cibo",
         "img": "🍮"
       },
       {
         "name": "Pasticciotto leccese",
+        "nameEn": "Lecce-Style Pasticciotto",
+        "nameFr": "Pasticciotto de Lecce",
         "desc": "Pasticciotto caldo, crema pasticcera",
+        "descEn": "Warm pasticciotto, custard cream",
+        "descFr": "Pasticciotto chaud, crème pâtissière",
         "price": 5,
         "type": "cibo",
         "img": "🥧"
       },
       {
         "name": "Cheesecake ai frutti di bosco",
+        "nameEn": "Berry Cheesecake",
+        "nameFr": "Cheesecake aux baies",
         "desc": "Base biscotto, frutti di bosco",
+        "descEn": "Biscuit base, mixed berries",
+        "descFr": "Base biscuitée, baies mélangées",
         "price": 7,
         "type": "cibo",
         "img": "🍰"
@@ -168,6 +244,8 @@
     "Caffetteria": [
       {
         "name": "Caffè espresso",
+        "nameEn": "Espresso",
+        "nameFr": "Espresso",
         "desc": "",
         "price": 1.5,
         "type": "bevanda",
@@ -175,6 +253,8 @@
       },
       {
         "name": "Caffè macchiato",
+        "nameEn": "Macchiato",
+        "nameFr": "Macchiato",
         "desc": "",
         "price": 1.8,
         "type": "bevanda",
@@ -182,6 +262,8 @@
       },
       {
         "name": "Cappuccino",
+        "nameEn": "Cappuccino",
+        "nameFr": "Cappuccino",
         "desc": "",
         "price": 2.5,
         "type": "bevanda",
@@ -189,6 +271,8 @@
       },
       {
         "name": "Marocchino",
+        "nameEn": "Marocchino",
+        "nameFr": "Marocchino",
         "desc": "",
         "price": 2.5,
         "type": "bevanda",
@@ -196,6 +280,8 @@
       },
       {
         "name": "Cioccolata calda",
+        "nameEn": "Hot Chocolate",
+        "nameFr": "Chocolat chaud",
         "desc": "",
         "price": 3.5,
         "type": "bevanda",
@@ -205,6 +291,8 @@
     "Thè e Infusi": [
       {
         "name": "Thè al limone",
+        "nameEn": "Lemon Tea",
+        "nameFr": "Thé au citron",
         "desc": "",
         "price": 2.5,
         "type": "bevanda",
@@ -212,6 +300,8 @@
       },
       {
         "name": "Thè al pesca",
+        "nameEn": "Peach Tea",
+        "nameFr": "Thé à la pêche",
         "desc": "",
         "price": 2.5,
         "type": "bevanda",
@@ -221,21 +311,33 @@
     "Spritz e Aperitivi": [
       {
         "name": "Spritz",
+        "nameEn": "Spritz",
+        "nameFr": "Spritz",
         "desc": "Aperol, Prosecco, soda",
+        "descEn": "Aperol, Prosecco, soda",
+        "descFr": "Aperol, Prosecco, soda",
         "price": 6,
         "type": "bevanda",
         "img": "🍹"
       },
       {
         "name": "Hugo",
+        "nameEn": "Hugo",
+        "nameFr": "Hugo",
         "desc": "Sambuco, prosecco, menta",
+        "descEn": "Elderflower, prosecco, mint",
+        "descFr": "Fleurs de sureau, prosecco, menthe",
         "price": 6,
         "type": "bevanda",
         "img": "🍹"
       },
       {
         "name": "Gin Lemon",
+        "nameEn": "Gin Lemon",
+        "nameFr": "Gin Lemon",
         "desc": "Gin, limone, soda",
+        "descEn": "Gin, lemon, soda",
+        "descFr": "Gin, citron, soda",
         "price": 7,
         "type": "bevanda",
         "img": "🍸"
@@ -244,6 +346,8 @@
     "Analcoliche": [
       {
         "name": "Acqua naturale 0.5L",
+        "nameEn": "Still Water 0.5L",
+        "nameFr": "Eau plate 0.5L",
         "desc": "",
         "price": 1.5,
         "type": "bevanda",
@@ -251,6 +355,8 @@
       },
       {
         "name": "Acqua frizzante 0.5L",
+        "nameEn": "Sparkling Water 0.5L",
+        "nameFr": "Eau gazeuse 0.5L",
         "desc": "",
         "price": 1.5,
         "type": "bevanda",
@@ -258,6 +364,8 @@
       },
       {
         "name": "Coca Cola",
+        "nameEn": "Coca Cola",
+        "nameFr": "Coca Cola",
         "desc": "",
         "price": 3,
         "type": "bevanda",
@@ -265,6 +373,8 @@
       },
       {
         "name": "Fanta",
+        "nameEn": "Fanta",
+        "nameFr": "Fanta",
         "desc": "",
         "price": 3,
         "type": "bevanda",
@@ -272,6 +382,8 @@
       },
       {
         "name": "Sprite",
+        "nameEn": "Sprite",
+        "nameFr": "Sprite",
         "desc": "",
         "price": 3,
         "type": "bevanda",
@@ -279,6 +391,8 @@
       },
       {
         "name": "Succo di frutta",
+        "nameEn": "Fruit Juice",
+        "nameFr": "Jus de fruits",
         "desc": "",
         "price": 3,
         "type": "bevanda",
@@ -288,6 +402,8 @@
     "Birre": [
       {
         "name": "Artigianale bionda",
+        "nameEn": "Blonde Craft Beer",
+        "nameFr": "Bière artisanale blonde",
         "desc": "",
         "price": 5,
         "type": "bevanda",
@@ -295,6 +411,8 @@
       },
       {
         "name": "Artigianale rossa",
+        "nameEn": "Red Craft Beer",
+        "nameFr": "Bière artisanale brune",
         "desc": "",
         "price": 5,
         "type": "bevanda",
@@ -302,6 +420,8 @@
       },
       {
         "name": "Ichnusa non filtrata",
+        "nameEn": "Ichnusa Unfiltered",
+        "nameFr": "Ichnusa non filtrée",
         "desc": "",
         "price": 4,
         "type": "bevanda",
@@ -309,6 +429,8 @@
       },
       {
         "name": "Moretti",
+        "nameEn": "Moretti",
+        "nameFr": "Moretti",
         "desc": "",
         "price": 3.5,
         "type": "bevanda",
@@ -318,42 +440,66 @@
     "Vini (bottiglia)": [
       {
         "name": "Primitivo",
+        "nameEn": "Primitivo",
+        "nameFr": "Primitivo",
         "desc": "Bottiglia 0.75L",
+        "descEn": "Bottle 0.75L",
+        "descFr": "Bouteille 0.75L",
         "price": 18,
         "type": "bevanda",
         "img": "🍷"
       },
       {
         "name": "Negroamaro",
+        "nameEn": "Negroamaro",
+        "nameFr": "Negroamaro",
         "desc": "Bottiglia 0.75L",
+        "descEn": "Bottle 0.75L",
+        "descFr": "Bouteille 0.75L",
         "price": 16,
         "type": "bevanda",
         "img": "🍷"
       },
       {
         "name": "Susumaniello",
+        "nameEn": "Susumaniello",
+        "nameFr": "Susumaniello",
         "desc": "Bottiglia 0.75L",
+        "descEn": "Bottle 0.75L",
+        "descFr": "Bouteille 0.75L",
         "price": 20,
         "type": "bevanda",
         "img": "🍷"
       },
       {
         "name": "Fiano",
+        "nameEn": "Fiano",
+        "nameFr": "Fiano",
         "desc": "Bottiglia 0.75L",
+        "descEn": "Bottle 0.75L",
+        "descFr": "Bouteille 0.75L",
         "price": 18,
         "type": "bevanda",
         "img": "🍷"
       },
       {
         "name": "Falanghina",
+        "nameEn": "Falanghina",
+        "nameFr": "Falanghina",
         "desc": "Bottiglia 0.75L",
+        "descEn": "Bottle 0.75L",
+        "descFr": "Bouteille 0.75L",
         "price": 16,
         "type": "bevanda",
         "img": "🍷"
       },
       {
         "name": "Prosecco DOCG",
+        "nameEn": "Prosecco DOCG",
+        "nameFr": "Prosecco DOCG",
         "desc": "Bottiglia 0.75L",
+        "descEn": "Bottle 0.75L",
+        "descFr": "Bouteille 0.75L",
         "price": 20,
         "type": "bevanda",
         "img": "🥂"
@@ -362,6 +508,8 @@
     "Vini (calice)": [
       {
         "name": "Primitivo calice",
+        "nameEn": "Primitivo by the Glass",
+        "nameFr": "Primitivo au verre",
         "desc": "",
         "price": 6,
         "type": "bevanda",
@@ -369,6 +517,8 @@
       },
       {
         "name": "Negroamaro calice",
+        "nameEn": "Negroamaro by the Glass",
+        "nameFr": "Negroamaro au verre",
         "desc": "",
         "price": 5,
         "type": "bevanda",
@@ -376,6 +526,8 @@
       },
       {
         "name": "Fiano calice",
+        "nameEn": "Fiano by the Glass",
+        "nameFr": "Fiano au verre",
         "desc": "",
         "price": 6,
         "type": "bevanda",
@@ -383,6 +535,8 @@
       },
       {
         "name": "Falanghina calice",
+        "nameEn": "Falanghina by the Glass",
+        "nameFr": "Falanghina au verre",
         "desc": "",
         "price": 5,
         "type": "bevanda",
@@ -392,6 +546,8 @@
     "Distillati": [
       {
         "name": "Amaro del Capo",
+        "nameEn": "Amaro del Capo",
+        "nameFr": "Amaro del Capo",
         "desc": "",
         "price": 4,
         "type": "bevanda",
@@ -399,6 +555,8 @@
       },
       {
         "name": "Limoncello",
+        "nameEn": "Limoncello",
+        "nameFr": "Limoncello",
         "desc": "",
         "price": 4,
         "type": "bevanda",
@@ -406,6 +564,8 @@
       },
       {
         "name": "Grappa",
+        "nameEn": "Grappa",
+        "nameFr": "Grappa",
         "desc": "",
         "price": 5,
         "type": "bevanda",

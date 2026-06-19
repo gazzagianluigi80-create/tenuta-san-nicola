@@ -1,6 +1,210 @@
 // ==================== MENU (caricato dal server) ====================
 let menu = { ristorante: {}, bar: {} };
 
+// ==================== LINGUA ====================
+let currentLang = localStorage.getItem('tsn_lang') || 'it';
+
+const LANG = {
+  it: {
+    aperto: '\u25CF Aperto',
+    chiuso: '\u25CF Chiuso',
+    cerca: '\uD83D\uDD0D Cerca nel menu...',
+    carrello_vuoto: 'Carrello vuoto',
+    invia_ordine: '\uD83D\uDCE9 INVIA ORDINE',
+    totale: 'Totale:',
+    ordine_inviato: '\u2705 Ordine inviato!',
+    seleziona_stanza: 'Seleziona una stanza',
+    carrello: '\uD83D\uDED2 Carrello',
+    storico: '\uD83D\uDCC3 Storico',
+    nessun_ordine_attivo: 'Nessun ordine attivo',
+    nessun_ordine_precedente: 'Nessun ordine precedente',
+    nessun_ordine_pagare: 'Nessun ordine da pagare',
+    nessun_ordine_pagato: 'Nessun ordine pagato',
+    nessun_ordine_completato: 'Nessun ordine completato',
+    aggiunto_carrello: 'aggiunto al carrello',
+    ordine_non_trovato: 'Ordine non trovato',
+    ristorante_chiuso: 'Il ristorante è chiuso all\'orario selezionato',
+    bar_chiuso: 'Il bar è chiuso in questo momento',
+    bar_chiuso_orario: 'Il bar è chiuso all\'orario selezionato',
+    // Categorie
+    Antipasti: 'Antipasti',
+    Primi: 'Primi',
+    Secondi: 'Secondi',
+    Contorni: 'Contorni',
+    Dolci: 'Dolci',
+    Caffetteria: 'Caffetteria',
+    'Th\u00E8 e Infusi': 'Th\u00E8 e Infusi',
+    'Spritz e Aperitivi': 'Spritz e Aperitivi',
+    Analcoliche: 'Analcoliche',
+    Birre: 'Birre',
+    'Vini (bottiglia)': 'Vini (bottiglia)',
+    'Vini (calice)': 'Vini (calice)',
+    Distillati: 'Distillati',
+    'Orario libero': 'Orario libero',
+    'Orario desiderato:': 'Orario desiderato:',
+    'Pranzo': 'Pranzo',
+    'Cena': 'Cena'
+  },
+  en: {
+    aperto: '\u25CF Open',
+    chiuso: '\u25CF Closed',
+    cerca: '\uD83D\uDD0D Search menu...',
+    carrello_vuoto: 'Empty cart',
+    invia_ordine: '\uD83D\uDCE9 SEND ORDER',
+    totale: 'Total:',
+    ordine_inviato: '\u2705 Order sent!',
+    seleziona_stanza: 'Select a room',
+    carrello: '\uD83D\uDED2 Cart',
+    storico: '\uD83D\uDCC3 History',
+    nessun_ordine_attivo: 'No active orders',
+    nessun_ordine_precedente: 'No previous orders',
+    nessun_ordine_pagare: 'No orders to pay',
+    nessun_ordine_pagato: 'No paid orders',
+    nessun_ordine_completato: 'No completed orders',
+    aggiunto_carrello: 'added to cart',
+    ordine_non_trovato: 'Order not found',
+    ristorante_chiuso: 'The restaurant is closed at the selected time',
+    bar_chiuso: 'The bar is currently closed',
+    bar_chiuso_orario: 'The bar is closed at the selected time',
+    Antipasti: 'Starters',
+    Primi: 'First Courses',
+    Secondi: 'Main Courses',
+    Contorni: 'Sides',
+    Dolci: 'Desserts',
+    Caffetteria: 'Coffee',
+    'Th\u00E8 e Infusi': 'Tea & Herbal Teas',
+    'Spritz e Aperitivi': 'Spritz & Aperitifs',
+    Analcoliche: 'Soft Drinks',
+    Birre: 'Beers',
+    'Vini (bottiglia)': 'Wines (bottle)',
+    'Vini (calice)': 'Wines (glass)',
+    Distillati: 'Spirits',
+    'Orario libero': 'Anytime',
+    'Orario desiderato:': 'Desired time:',
+    'Pranzo': 'Lunch',
+    'Cena': 'Dinner'
+  },
+  fr: {
+    aperto: '\u25CF Ouvert',
+    chiuso: '\u25CF Ferm\u00E9',
+    cerca: '\uD83D\uDD0D Rechercher...',
+    carrello_vuoto: 'Panier vide',
+    invia_ordine: '\uD83D\uDCE9 ENVOYER',
+    totale: 'Total:',
+    ordine_inviato: '\u2705 Commande envoy\u00E9e!',
+    seleziona_stanza: 'S\u00E9lectionnez une chambre',
+    carrello: '\uD83D\uDED2 Panier',
+    storico: '\uD83D\uDCC3 Historique',
+    nessun_ordine_attivo: 'Aucune commande active',
+    nessun_ordine_precedente: 'Aucune commande pr\u00E9c\u00E9dente',
+    nessun_ordine_pagare: 'Aucune commande \u00E0 payer',
+    nessun_ordine_pagato: 'Aucune commande pay\u00E9e',
+    nessun_ordine_completato: 'Aucune commande termin\u00E9e',
+    aggiunto_carrello: 'ajout\u00E9 au panier',
+    ordine_non_trovato: 'Commande non trouv\u00E9e',
+    ristorante_chiuso: 'Le restaurant est ferm\u00E9 \u00E0 l\'horaire s\u00E9lectionn\u00E9',
+    bar_chiuso: 'Le bar est actuellement ferm\u00E9',
+    bar_chiuso_orario: 'Le bar est ferm\u00E9 \u00E0 l\'horaire s\u00E9lectionn\u00E9',
+    Antipasti: 'Entr\u00E9es',
+    Primi: 'Premiers plats',
+    Secondi: 'Plats principaux',
+    Contorni: 'Accompagnements',
+    Dolci: 'Desserts',
+    Caffetteria: 'Caf\u00E9',
+    'Th\u00E8 e Infusi': 'Th\u00E9s & Infusions',
+    'Spritz e Aperitivi': 'Spritz & Ap\u00E9ritifs',
+    Analcoliche: 'Boissons sans alcool',
+    Birre: 'Bi\u00E8res',
+    'Vini (bottiglia)': 'Vins (bouteille)',
+    'Vini (calice)': 'Vins (verre)',
+    Distillati: 'Digestifs',
+    'Orario libero': 'Heure libre',
+    'Orario desiderato:': 'Horaire souhait\u00E9:',
+    'Pranzo': 'D\u00E9jeuner',
+    'Cena': 'D\u00EEner'
+  }
+},
+es: {
+  aperto: '\u25CF Abierto',
+  chiuso: '\u25CF Cerrado',
+  cerca: '\uD83D\uDD0D Buscar en el men\u00FA...',
+  carrello_vuoto: 'Carrito vac\u00EDo',
+  invia_ordine: '\uD83D\uDCE9 ENVIAR PEDIDO',
+  totale: 'Total:',
+  ordine_inviato: '\u2705 \u00A1Pedido enviado!',
+  seleziona_stanza: 'Seleccione una habitaci\u00F3n',
+  carrello: '\uD83D\uDED2 Carrito',
+  storico: '\uD83D\uDCC3 Historial',
+  nessun_ordine_attivo: 'No hay pedidos activos',
+  nessun_ordine_precedente: 'No hay pedidos anteriores',
+  nessun_ordine_pagare: 'No hay pedidos por pagar',
+  nessun_ordine_pagato: 'No hay pedidos pagados',
+  nessun_ordine_completato: 'No hay pedidos completados',
+  aggiunto_carrello: 'a\u00F1adido al carrito',
+  ordine_non_trovato: 'Pedido no encontrado',
+  ristorante_chiuso: 'El restaurante est\u00E1 cerrado en el horario seleccionado',
+  bar_chiuso: 'El bar est\u00E1 cerrado en este momento',
+  bar_chiuso_orario: 'El bar est\u00E1 cerrado en el horario seleccionado',
+  Antipasti: 'Entrantes',
+  Primi: 'Primeros platos',
+  Secondi: 'Segundos platos',
+  Contorni: 'Acompa\u00F1amientos',
+  Dolci: 'Postres',
+  Caffetteria: 'Cafeter\u00EDa',
+  'Th\u00E8 e Infusi': 'T\u00E9s e Infusiones',
+  'Spritz e Aperitivi': 'Spritz y Aperitivos',
+  Analcoliche: 'Sin alcohol',
+  Birre: 'Cervezas',
+  'Vini (bottiglia)': 'Vinos (botella)',
+  'Vini (calice)': 'Vinos (copa)',
+  Distillati: 'Destilados',
+  'Orario libero': 'Horario libre',
+  'Orario desiderato:': 'Horario deseado:',
+  'Pranzo': 'Almuerzo',
+  'Cena': 'Cena'
+},
+  };
+
+function t(key) {
+  return LANG[currentLang]?.[key] ?? LANG['it'][key] ?? key;
+}
+
+function menuName(item) {
+  if (currentLang === 'en') return item.nameEn || item.name;
+  if (currentLang === 'fr') return item.nameFr || item.nameEn || item.name;
+  if (currentLang === 'es') return item.nameEs || item.nameEn || item.name;
+
+  return item.name;
+}
+
+function menuDesc(item) {
+  const fallback = item.desc !== undefined ? item.desc : '';
+  if (currentLang === 'en') return item.descEn !== undefined ? item.descEn : fallback;
+  if (currentLang === 'fr') return item.descFr !== undefined ? item.descFr : (item.descEn !== undefined ? item.descEn : fallback);
+  if (currentLang === 'es') return item.descEs !== undefined ? item.descEs : (item.descEn !== undefined ? item.descEn : fallback);
+
+  return fallback;
+}
+
+function updateLangButtons() {
+  document.querySelectorAll('.lang-btn, .lang-btn-sm').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === currentLang);
+  });
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('tsn_lang', lang);
+  updateLangButtons();
+  const guestScreen = document.getElementById('guestScreen');
+  if (guestScreen && guestScreen.classList.contains('active')) {
+    renderMenu();
+  }
+  if (document.getElementById('cartScreen') && document.getElementById('cartScreen').classList.contains('active')) {
+    renderCart();
+  }
+}
+
 // ==================== VARIABILI GLOBALI ====================
 const ROOMS = [
   { id: 1, name: 'Messapi' },
@@ -153,21 +357,23 @@ function renderMenu() {
 
     const isOpen = isOpenNow(currentMenuType);
     const openStatus = isOpen
-        ? '<span style="display:inline-block;background:#4CAF50;color:white;padding:4px 14px;border-radius:20px;font-size:0.8rem;font-weight:bold;margin-bottom:12px;">\u25CF Aperto</span>'
-        : '<span style="display:inline-block;background:#D95A2B;color:white;padding:4px 14px;border-radius:20px;font-size:0.8rem;font-weight:bold;margin-bottom:12px;">\u25CF Chiuso</span>';
+        ? `<span style="display:inline-block;background:#4CAF50;color:white;padding:4px 14px;border-radius:20px;font-size:0.8rem;font-weight:bold;margin-bottom:12px;">${t('aperto')}</span>`
+        : `<span style="display:inline-block;background:#D95A2B;color:white;padding:4px 14px;border-radius:20px;font-size:0.8rem;font-weight:bold;margin-bottom:12px;">${t('chiuso')}</span>`;
 
     let html = openStatus;
-    html += '<input type="text" id="searchMenu" class="search-input" placeholder="\uD83D\uDD0D Cerca nel menu...">';
+    html += `<input type="text" id="searchMenu" class="search-input" placeholder="${t('cerca')}">`;
 
     for (const [category, items] of Object.entries(menuData)) {
-        html += `<div class="category"><h3>${category}</h3>`;
+        const catName = menuName({ name: category, nameEn: t(category), nameFr: t(category) });
+        html += `<div class="category"><h3>${catName}</h3>`;
         items.forEach(item => {
-            const safeDesc = item.desc ? item.desc.replace(/'/g, "\\'") : '';
+            const displayName = menuName(item);
+            const displayDesc = menuDesc(item);
             html += `
                 <div class="product-card" data-name="${item.name.toLowerCase()}">
                     <div class="product-info">
-                        <h4>${item.img} ${item.name}</h4>
-                        <p>${item.desc || ''}</p>
+                        <h4>${item.img} ${displayName}</h4>
+                        <p>${displayDesc}</p>
                         <span class="product-price">\u20AC${item.price}</span>
                     </div>
                     <button class="add-btn" onclick="addToCart('${item.name.replace(/'/g, "\\'")}')">+</button>
@@ -209,7 +415,7 @@ function addToCart(name) {
     else cart.push({ ...item, qty: 1 });
     saveData();
     updateCartIcon();
-    showToast(`\u2795 ${item.name} aggiunto al carrello`);
+    showToast(`\u2795 ${menuName(item)} ${t('aggiunto_carrello')}`);
     if (navigator.vibrate) navigator.vibrate(50);
 }
 
@@ -228,7 +434,7 @@ function renderCart() {
     if (!container) return;
 
     if (cart.length === 0) {
-        container.innerHTML = '<p style="text-align:center;color:#999;margin-top:40px;">Carrello vuoto</p>';
+        container.innerHTML = `<p style="text-align:center;color:#999;margin-top:40px;">${t('carrello_vuoto')}</p>`;
         document.getElementById('cartTotal').textContent = '0';
         document.getElementById('orderTimeSelector').style.display = 'none';
         return;
@@ -239,10 +445,11 @@ function renderCart() {
     cart.forEach((item, idx) => {
         const itemTotal = item.price * item.qty;
         total += itemTotal;
+        const displayName = menuName(item);
         html += `
             <div class="cart-item">
                 <div class="cart-item-info">
-                    <strong>${item.img} ${item.name}</strong><br>
+                    <strong>${item.img} ${displayName}</strong><br>
                     <small>\u20AC${item.price} x ${item.qty} = \u20AC${itemTotal.toFixed(2)}</small>
                 </div>
                 <div class="cart-item-qty">
@@ -264,18 +471,18 @@ function renderCart() {
         timeSelect.style.display = 'block';
         if (hasFood) {
             select.innerHTML = `
-                <option value="12:30">Pranzo 12:30</option>
-                <option value="13:00">Pranzo 13:00</option>
-                <option value="13:30">Pranzo 13:30</option>
-                <option value="14:00">Pranzo 14:00</option>
-                <option value="19:30">Cena 19:30</option>
-                <option value="20:00">Cena 20:00</option>
-                <option value="20:30">Cena 20:30</option>
-                <option value="21:00">Cena 21:00</option>
-                <option value="21:30">Cena 21:30</option>
+                <option value="12:30">${t('Pranzo')} 12:30</option>
+                <option value="13:00">${t('Pranzo')} 13:00</option>
+                <option value="13:30">${t('Pranzo')} 13:30</option>
+                <option value="14:00">${t('Pranzo')} 14:00</option>
+                <option value="19:30">${t('Cena')} 19:30</option>
+                <option value="20:00">${t('Cena')} 20:00</option>
+                <option value="20:30">${t('Cena')} 20:30</option>
+                <option value="21:00">${t('Cena')} 21:00</option>
+                <option value="21:30">${t('Cena')} 21:30</option>
             `;
         } else {
-            select.innerHTML = `<option value="Orario libero">Orario libero (bar)</option>`;
+            select.innerHTML = `<option value="Orario libero">${t('Orario libero')} (bar)</option>`;
         }
     }
 }
@@ -357,11 +564,11 @@ function isTimeOpen(type, timeStr) {
 
 async function submitOrder() {
     if (cart.length === 0) {
-        showToast('Carrello vuoto');
+        showToast(t('carrello_vuoto'));
         return;
     }
     if (!currentRoom) {
-        showToast('Seleziona una stanza');
+        showToast(t('seleziona_stanza'));
         return;
     }
 
@@ -371,17 +578,17 @@ async function submitOrder() {
     const orderTime = document.getElementById('orderTime').value || 'Orario libero';
 
     if (hasFood && !isTimeOpen('ristorante', orderTime)) {
-        showToast('Il ristorante è chiuso all\'orario selezionato');
+        showToast(t('ristorante_chiuso'));
         return;
     }
     if (hasDrinks) {
         if (orderTime === 'Orario libero') {
             if (!isOpenNow('bar')) {
-                showToast('Il bar è chiuso in questo momento');
+                showToast(t('bar_chiuso'));
                 return;
             }
         } else if (!isTimeOpen('bar', orderTime)) {
-            showToast('Il bar è chiuso all\'orario selezionato');
+            showToast(t('bar_chiuso_orario'));
             return;
         }
     }
@@ -407,7 +614,7 @@ async function submitOrder() {
     updateCartIcon();
     showScreen('guestScreen');
     renderMenu();
-    showToast(`\u2705 Ordine #${order.id.toUpperCase()} inviato!`);
+    showToast(`\u2705 #${order.id.toUpperCase()} ${t('ordine_inviato')}`);
 
     if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
 }
@@ -420,13 +627,13 @@ function showHistory() {
 
     const roomOrders = orders.filter(o => o.room === currentRoom && o.delivered);
     if (roomOrders.length === 0) {
-        container.innerHTML = '<p style="text-align:center;color:#999;margin-top:40px;">Nessun ordine precedente</p>';
+        container.innerHTML = `<p style="text-align:center;color:#999;margin-top:40px;">${t('nessun_ordine_precedente')}</p>`;
         return;
     }
 
     let html = '';
     roomOrders.reverse().forEach(order => {
-        const itemsList = order.items.map(i => `${i.img} ${i.name} x${i.qty}`).join(', ');
+        const itemsList = order.items.map(i => `${i.img} ${menuName(i)} x${i.qty}`).join(', ');
         const date = new Date(order.timestamp);
         html += `
             <div class="history-item">
@@ -475,7 +682,7 @@ function renderKitchenDashboard() {
 
 function renderStaffOrders(container, activeOrders, staffRole) {
     if (activeOrders.length === 0) {
-        container.innerHTML = '<p style="text-align:center;color:#999;margin-top:40px;">Nessun ordine attivo</p>';
+        container.innerHTML = `<p style="text-align:center;color:#999;margin-top:40px;">${t('nessun_ordine_attivo')}</p>`;
         return;
     }
 
@@ -506,8 +713,8 @@ function renderStaffOrders(container, activeOrders, staffRole) {
                     </div>
                     <div class="order-items">
                         <strong>🍽️ Cibo:</strong><br>
-                        ${foodItems.map(i => `${i.img} ${i.name} x${i.qty} - €${(i.price * i.qty).toFixed(2)}`).join('<br>')}
-                        ${drinkItems.length > 0 ? `<br><small style="color:#999;">Il bar prepara: ${drinkItems.map(i => `${i.name} x${i.qty}`).join(', ')}</small>` : ''}
+                        ${foodItems.map(i => `${i.img} ${menuName(i)} x${i.qty} - €${(i.price * i.qty).toFixed(2)}`).join('<br>')}
+                        ${drinkItems.length > 0 ? `<br><small style="color:#999;">Il bar prepara: ${drinkItems.map(i => `${menuName(i)} x${i.qty}`).join(', ')}</small>` : ''}
                     </div>
                     <div class="order-status">${statusHtml}</div>
                     <div>${actionHtml}</div>
@@ -549,8 +756,8 @@ function renderStaffOrders(container, activeOrders, staffRole) {
                     </div>
                     <div class="order-items">
                         <strong>🍺 Bevande:</strong><br>
-                        ${drinkItems.map(i => `${i.img} ${i.name} x${i.qty} - €${(i.price * i.qty).toFixed(2)}`).join('<br>')}
-                        ${foodItems.length > 0 ? `<br><strong style="color:#D95A2B;">🍽️ Cibo da prendere in cucina:</strong><br>${foodItems.map(i => `${i.img} ${i.name} x${i.qty}`).join('<br>')}` : ''}
+                        ${drinkItems.map(i => `${i.img} ${menuName(i)} x${i.qty} - €${(i.price * i.qty).toFixed(2)}`).join('<br>')}
+                        ${foodItems.length > 0 ? `<br><strong style="color:#D95A2B;">🍽️ Cibo da prendere in cucina:</strong><br>${foodItems.map(i => `${i.img} ${menuName(i)} x${i.qty}`).join('<br>')}` : ''}
                     </div>
                     <div class="order-status">${statusHtml}</div>
                     <div>${actionHtml}</div>
@@ -593,7 +800,7 @@ function renderReceptionDashboard() {
 
     const unpaidOrders = orders.filter(o => o.delivered && !o.paid);
     if (unpaidOrders.length === 0) {
-        container.innerHTML = '<p style="text-align:center;color:#999;margin-top:40px;">Nessun ordine da pagare</p>';
+        container.innerHTML = `<p style="text-align:center;color:#999;margin-top:40px;">${t('nessun_ordine_pagare')}</p>`;
         document.getElementById('totalDaIncassare').textContent = '0.00';
         return;
     }
@@ -623,7 +830,7 @@ function renderReceptionDashboard() {
                         <span>${date.toLocaleTimeString('it-IT', {hour:'2-digit',minute:'2-digit'})}</span>
                     </div>
                     ${order.items.map(i => `<div style="display:flex;justify-content:space-between;padding:2px 0;">
-                        <span>${i.img} ${i.name} x${i.qty}</span>
+                        <span>${i.img} ${menuName(i)} x${i.qty}</span>
                         <span>\u20AC${(i.price * i.qty).toFixed(2)}</span>
                     </div>`).join('')}
                     <div style="text-align:right;font-weight:bold;border-top:1px solid #ddd;margin-top:4px;padding-top:4px;">
@@ -681,7 +888,7 @@ function showReceptionHistory() {
 
     const paidOrders = orders.filter(o => o.paid);
     if (paidOrders.length === 0) {
-        container.innerHTML = '<p style="text-align:center;color:#999;margin-top:40px;">Nessun ordine pagato</p>';
+        container.innerHTML = `<p style="text-align:center;color:#999;margin-top:40px;">${t('nessun_ordine_pagato')}</p>`;
         return;
     }
 
@@ -743,13 +950,13 @@ function showStaffHistory(role) {
 
     const deliveredOrders = orders.filter(o => o.delivered);
     if (deliveredOrders.length === 0) {
-        container.innerHTML = '<p style="text-align:center;color:#999;margin-top:40px;">Nessun ordine completato</p>';
+        container.innerHTML = `<p style="text-align:center;color:#999;margin-top:40px;">${t('nessun_ordine_completato')}</p>`;
         return;
     }
 
     let html = '';
     deliveredOrders.reverse().forEach(order => {
-        const itemsList = order.items.map(i => `${i.img} ${i.name} x${i.qty}`).join(', ');
+        const itemsList = order.items.map(i => `${i.img} ${menuName(i)} x${i.qty}`).join(', ');
         const date = new Date(order.timestamp);
         html += `
             <div class="history-item">
@@ -815,6 +1022,13 @@ function getUrlParam(name) {
 
 async function initApp() {
     renderRoomButtons();
+
+    const langParam = getUrlParam('lang');
+    if (langParam && ['it', 'en', 'es', 'fr'].includes(langParam)) {
+        currentLang = langParam;
+        localStorage.setItem('tsn_lang', langParam);
+    }
+    updateLangButtons();
 
     const menuLoaded = await loadMenuFromServer();
     if (!menuLoaded) {
@@ -887,7 +1101,7 @@ function printOrdersPDF() {
                 const itemTotal = item.price * item.qty;
                 html += `<tr>
                     <td>${idx === 0 ? '#' + order.id.toUpperCase() : ''}</td>
-                    <td>${item.img} ${item.name}</td>
+                    <td>${item.img} ${menuName(item)}</td>
                     <td>${item.qty}</td>
                     <td>€${item.price.toFixed(2)}</td>
                     <td>€${itemTotal.toFixed(2)}</td>

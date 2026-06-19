@@ -24,6 +24,13 @@
 
         <!-- Schermata selezione ruolo -->
         <div id="roleScreen" class="screen active">
+            <div class="lang-bar">
+                <button class="lang-btn active" data-lang="it" onclick="setLang('it')">&#127470;&#127481; IT</button>
+                <button class="lang-btn" data-lang="en" onclick="setLang('en')">&#127468;&#127463; EN</button>
+                <button class="lang-btn" data-lang="es" onclick="setLang('es')">&#127466;&#127480; ES</button>
+                <button class="lang-btn" data-lang="fr" onclick="setLang('fr')">&#127467;&#127479; FR</button>
+
+            </div>
             <div style="text-align:right;margin-bottom:10px;display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;">
                 <a href="booking.html" style="color:#2E5A3B;text-decoration:none;font-size:0.9rem;font-weight:bold;">&#9971; Prenotazioni</a>
                 <a href="admin.html" style="color:#2E5A3B;text-decoration:none;font-size:0.9rem;font-weight:bold;">&#9881; Pannello Admin</a>
@@ -44,6 +51,13 @@
         <div id="guestScreen" class="screen">
             <div class="guest-header">
                 <span class="room-number"></span>
+                <div class="lang-bar" style="display:inline-flex;gap:3px;">
+                    <button class="lang-btn-sm active" data-lang="it" onclick="setLang('it')">&#127470;&#127481;</button>
+                    <button class="lang-btn-sm" data-lang="en" onclick="setLang('en')">&#127468;&#127463;</button>
+                    <button class="lang-btn-sm" data-lang="es" onclick="setLang('es')">&#127466;&#127480;</button>
+                    <button class="lang-btn-sm" data-lang="fr" onclick="setLang('fr')">&#127467;&#127479;</button>
+
+                </div>
                 <div>
                     <button class="history-btn" onclick="backToRoles()" style="background:#D95A2B;color:white;margin-right:8px;">&#128682;</button>
                     <button class="history-btn" onclick="showHistory()">&#128203; Storico</button>

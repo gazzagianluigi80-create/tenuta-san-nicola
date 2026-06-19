@@ -506,3 +506,46 @@ header h1 {
     gap: 15px;
     margin-bottom: 20px;
 }
+
+.lang-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    justify-content: center;
+}
+
+.lang-btn {
+    padding: 6px 14px;
+    border: 2px solid #C9A87C;
+    border-radius: 20px;
+    background: white;
+    color: #2E5A3B;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.lang-btn.active {
+    background: #2E5A3B;
+    border-color: #2E5A3B;
+    color: white;
+}
+
+.lang-btn-sm {
+    padding: 3px 8px;
+    border: 2px solid #C9A87C;
+    border-radius: 14px;
+    background: white;
+    color: #2E5A3B;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1;
+}
+
+.lang-btn-sm.active {
+    background: #2E5A3B;
+    border-color: #2E5A3B;
+    color: white;
+}
