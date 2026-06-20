@@ -23,7 +23,13 @@
         .item-row { display: flex; align-items: center; gap: 8px; padding: 8px; margin: 4px 0; border-radius: 8px; background: #F9F7F2; flex-wrap: wrap; }
         .item-row input { padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.85rem; }
         .item-row .name-input { width: 140px; }
-        .item-row .desc-input { width: 160px; }
+        .item-row .name-en-input { width: 100px; }
+        .item-row .name-fr-input { width: 100px; }
+        .item-row .name-es-input { width: 100px; }
+        .item-row .desc-input { width: 200px; }
+        .item-row .desc-en-input { width: 160px; }
+        .item-row .desc-fr-input { width: 160px; }
+        .item-row .desc-es-input { width: 160px; }
         .item-row .price-input { width: 55px; }
         .item-row .emoji-input { width: 40px; text-align: center; }
         .item-row .type-select { padding: 4px; border-radius: 4px; border: 1px solid #ddd; font-size: 0.85rem; }
@@ -42,7 +48,9 @@
         .rename-cat-input { border: 1px solid #C9A87C; border-radius: 4px; padding: 4px 8px; font-size: 0.9rem; width: 160px; }
         .logout-link { color: #D95A2B; cursor: pointer; text-decoration: none; font-size: 0.9rem; }
         @media (max-width: 600px) {
-            .item-row input, .item-row .name-input, .item-row .desc-input { width: 100%; }
+            .item-row input, .item-row .name-input, .item-row .desc-input,
+            .item-row .name-en-input, .item-row .name-fr-input, .item-row .name-es-input,
+            .item-row .desc-en-input, .item-row .desc-fr-input, .item-row .desc-es-input { width: 100%; }
         }
     </style>
 </head>
@@ -170,8 +178,10 @@
                         ${items.map((item, idx) => `
                             <div class="item-row">
                                 <input class="emoji-input" value="${item.img || ''}" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'img', this.value)">
-                                <input class="name-input" value="${item.name.replace(/"/g, '&quot;')}" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'name', this.value)">
-                                <input class="desc-input" value="${(item.desc || '').replace(/"/g, '&quot;')}" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'desc', this.value)">
+                                <input class="name-input" value="${item.name.replace(/"/g, '&quot;')}" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'name', this.value)" placeholder="Nome IT">
+                                <input class="name-en-input" value="${(item.nameEn || '').replace(/"/g, '&quot;')}" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'nameEn', this.value)" placeholder="EN">
+                                <input class="name-fr-input" value="${(item.nameFr || '').replace(/"/g, '&quot;')}" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'nameFr', this.value)" placeholder="FR">
+                                <input class="name-es-input" value="${(item.nameEs || '').replace(/"/g, '&quot;')}" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'nameEs', this.value)" placeholder="ES">
                                 <input class="price-input" type="number" step="0.5" value="${item.price}" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'price', parseFloat(this.value) || 0)">
                                 <select class="type-select" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'type', this.value)">
                                     <option value="cibo" ${item.type === 'cibo' ? 'selected' : ''}>&#127869; Cibo</option>
@@ -179,17 +189,30 @@
                                 </select>
                                 <button class="btn-del" onclick="deleteItem('${catName.replace(/'/g, "\\'")}', ${idx})">&#10005;</button>
                             </div>
+                            <div class="item-row">
+                                <input class="desc-input" value="${(item.desc || '').replace(/"/g, '&quot;')}" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'desc', this.value)" placeholder="Descrizione IT">
+                                <input class="desc-en-input" value="${(item.descEn || '').replace(/"/g, '&quot;')}" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'descEn', this.value)" placeholder="EN descr.">
+                                <input class="desc-fr-input" value="${(item.descFr || '').replace(/"/g, '&quot;')}" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'descFr', this.value)" placeholder="FR descr.">
+                                <input class="desc-es-input" value="${(item.descEs || '').replace(/"/g, '&quot;')}" onchange="editItem('${catName.replace(/'/g, "\\'")}', ${idx}, 'descEs', this.value)" placeholder="ES descr.">
+                            </div>
                         `).join('')}
                         <div class="add-item-form">
                             <input class="emoji-input" placeholder="emoji" id="newEmoji_${catName.replace(/[^a-z]/gi,'')}">
-                            <input placeholder="Nome" id="newName_${catName.replace(/[^a-z]/gi,'')}">
-                            <input placeholder="Descrizione" id="newDesc_${catName.replace(/[^a-z]/gi,'')}">
+                            <input placeholder="Nome IT" id="newName_${catName.replace(/[^a-z]/gi,'')}">
+                            <input placeholder="EN" id="newNameEn_${catName.replace(/[^a-z]/gi,'')}">
+                            <input placeholder="FR" id="newNameFr_${catName.replace(/[^a-z]/gi,'')}">
+                            <input placeholder="ES" id="newNameEs_${catName.replace(/[^a-z]/gi,'')}">
                             <input type="number" step="0.5" placeholder="Prezzo" id="newPrice_${catName.replace(/[^a-z]/gi,'')}">
                             <select id="newType_${catName.replace(/[^a-z]/gi,'')}">
                                 <option value="cibo">Cibo</option>
                                 <option value="bevanda">Bevanda</option>
                             </select>
                             <button class="btn-add" onclick="addItem('${catName.replace(/'/g, "\\'")}')">+</button>
+                            <br>
+                            <input placeholder="Descrizione IT" id="newDesc_${catName.replace(/[^a-z]/gi,'')}" style="width:200px;">
+                            <input placeholder="EN descr." id="newDescEn_${catName.replace(/[^a-z]/gi,'')}" style="width:160px;">
+                            <input placeholder="FR descr." id="newDescFr_${catName.replace(/[^a-z]/gi,'')}" style="width:160px;">
+                            <input placeholder="ES descr." id="newDescEs_${catName.replace(/[^a-z]/gi,'')}" style="width:160px;">
                         </div>
                     </div>
                 `;
@@ -214,7 +237,13 @@
             const safe = catName.replace(/[^a-z]/gi,'');
             const emoji = document.getElementById('newEmoji_' + safe).value || '&#127869;';
             const name = document.getElementById('newName_' + safe).value.trim();
+            const nameEn = document.getElementById('newNameEn_' + safe).value.trim();
+            const nameFr = document.getElementById('newNameFr_' + safe).value.trim();
+            const nameEs = document.getElementById('newNameEs_' + safe).value.trim();
             const desc = document.getElementById('newDesc_' + safe).value.trim();
+            const descEn = document.getElementById('newDescEn_' + safe).value.trim();
+            const descFr = document.getElementById('newDescFr_' + safe).value.trim();
+            const descEs = document.getElementById('newDescEs_' + safe).value.trim();
             const price = parseFloat(document.getElementById('newPrice_' + safe).value) || 0;
 
             if (!name) { alert('Inserisci un nome'); return; }
@@ -222,11 +251,25 @@
             const typeSelect = document.getElementById('newType_' + safe);
             const type = typeSelect ? typeSelect.value : 'cibo';
 
-            menuData[currentMenuType][catName].push({ name, desc, price, type, img: emoji });
+            const newItem = { name, desc, price, type, img: emoji };
+            if (nameEn) newItem.nameEn = nameEn;
+            if (nameFr) newItem.nameFr = nameFr;
+            if (nameEs) newItem.nameEs = nameEs;
+            if (descEn) newItem.descEn = descEn;
+            if (descFr) newItem.descFr = descFr;
+            if (descEs) newItem.descEs = descEs;
+
+            menuData[currentMenuType][catName].push(newItem);
 
             document.getElementById('newEmoji_' + safe).value = '';
             document.getElementById('newName_' + safe).value = '';
+            document.getElementById('newNameEn_' + safe).value = '';
+            document.getElementById('newNameFr_' + safe).value = '';
+            document.getElementById('newNameEs_' + safe).value = '';
             document.getElementById('newDesc_' + safe).value = '';
+            document.getElementById('newDescEn_' + safe).value = '';
+            document.getElementById('newDescFr_' + safe).value = '';
+            document.getElementById('newDescEs_' + safe).value = '';
             document.getElementById('newPrice_' + safe).value = '';
 
             renderCategory();
