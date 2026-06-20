@@ -20,223 +20,131 @@
     }
   },
   "ristorante": {
-    "Antipasti": [
+    "Antipasti e Sfizi": [
       {
-        "name": "Burrata pugliese",
-        "nameEn": "Pugliese Burrata",
-        "nameFr": "Burrata des Pouilles",
-        "desc": "Burrata cremosa, pomodorini confit, basilico",
-        "descEn": "Creamy burrata, confit cherry tomatoes, basil",
-        "descFr": "Burrata crémeuse, tomates cerises confites, basilic",
+        "name": "Insalata caprese",
+        "price": 9,
+        "desc": "Pomodori pachino, mozzarella fior di latte e pan puccia",
+        "type": "cibo",
+        "img": "\ud83e\udd57"
+      },
+      {
+        "name": "Insalata di pollo",
         "price": 12,
+        "desc": "Insalata verde, pomodori pachino, tagliata di pollo, scaglie di parmigiano e pan puccia",
         "type": "cibo",
-        "img": "🍽️"
+        "img": "\ud83e\udd57"
       },
       {
-        "name": "Caprese al cucchiaio",
-        "nameEn": "Spoon Caprese",
-        "nameFr": "Caprese à la cuillère",
-        "desc": "Mozzarella, datterini, crema di basilico",
-        "descEn": "Mozzarella, cherry tomatoes, basil cream",
-        "descFr": "Mozzarella, tomates cerises, crème de basilic",
-        "price": 10,
-        "type": "cibo",
-        "img": "🥗"
-      },
-      {
-        "name": "Polpo alla griglia",
-        "nameEn": "Grilled Octopus",
-        "nameFr": "Poulpe grillé",
-        "desc": "Polpo tenero, patate affumicate, salsa verde",
-        "descEn": "Tender octopus, smoked potatoes, green sauce",
-        "descFr": "Poulpe tendre, pommes fumées, sauce verte",
-        "price": 16,
-        "type": "cibo",
-        "img": "🐙"
-      },
-      {
-        "name": "Carpaccio di manzo",
-        "nameEn": "Beef Carpaccio",
-        "nameFr": "Carpaccio de bœuf",
-        "desc": "Fassona, grana, rucola, lime",
-        "descEn": "Fassona beef, grana cheese, rocket, lime",
-        "descFr": "Bœuf Fassona, grana, roquette, lime",
+        "name": "Crudo e bufala",
         "price": 14,
+        "desc": "Prosciutto crudo, mozzarella di bufala e pan puccia",
         "type": "cibo",
-        "img": "🥩"
-      }
-    ],
-    "Primi": [
-      {
-        "name": "Orecchiette cime di rapa",
-        "nameEn": "Orecchiette with Turnip Tops",
-        "nameFr": "Orecchiette aux feuilles de navet",
-        "desc": "Orecchiette fresche, cime di rapa, acciughe",
-        "descEn": "Fresh orecchiette, turnip tops, anchovies",
-        "descFr": "Orecchiette fraîches, feuilles de navet, anchois",
-        "price": 14,
-        "type": "cibo",
-        "img": "🍝"
+        "img": "\ud83e\udd69"
       },
       {
-        "name": "Risotto ai frutti di mare",
-        "nameEn": "Seafood Risotto",
-        "nameFr": "Risotto aux fruits de mer",
-        "desc": "Risotto cremoso, frutti di mare misti",
-        "descEn": "Creamy risotto, mixed seafood",
-        "descFr": "Risotto crémeux, fruits de mer mélangés",
-        "price": 22,
-        "type": "cibo",
-        "img": "🍚"
-      },
-      {
-        "name": "Troccoli al sugo di braciola",
-        "nameEn": "Troccoli with Braised Pork Sauce",
-        "nameFr": "Troccoli à la sauce de braciole",
-        "desc": "Troccoli fatti in casa, sugo di braciola",
-        "descEn": "Homemade troccoli, braised pork sauce",
-        "descFr": "Troccoli faits maison, sauce de braciole",
-        "price": 16,
-        "type": "cibo",
-        "img": "🍝"
-      },
-      {
-        "name": "Gnocchi allo scoglio",
-        "nameEn": "Seafood Gnocchi",
-        "nameFr": "Gnocchi aux fruits de mer",
-        "desc": "Gnocchi di patate, frutti di mare",
-        "descEn": "Potato gnocchi, mixed seafood",
-        "descFr": "Gnocchi de pommes de terre, fruits de mer",
-        "price": 20,
-        "type": "cibo",
-        "img": "🥔"
-      }
-    ],
-    "Secondi": [
-      {
-        "name": "Filetto di manzo",
-        "nameEn": "Beef Fillet",
-        "nameFr": "Filet de bœuf",
-        "desc": "Filetto, riduzione al Barolo, rucola",
-        "descEn": "Beef fillet, Barolo wine reduction, rocket",
-        "descFr": "Filet de bœuf, réduction au Barolo, roquette",
-        "price": 28,
-        "type": "cibo",
-        "img": "🥩"
-      },
-      {
-        "name": "Grigliata di pesce",
-        "nameEn": "Mixed Grilled Fish",
-        "nameFr": "Poisson grillé mixte",
-        "desc": "Orata, spigola, gamberi, calamari",
-        "descEn": "Sea bream, sea bass, prawns, calamari",
-        "descFr": "Dorade, bar, crevettes, calamars",
-        "price": 32,
-        "type": "cibo",
-        "img": "🐟"
-      },
-      {
-        "name": "Polpette di melanzane",
-        "nameEn": "Eggplant Meatballs",
-        "nameFr": "Boulettes d'aubergine",
-        "desc": "Polpette di melanzane, pomodoro fresco, basilico",
-        "descEn": "Eggplant meatballs, fresh tomato, basil",
-        "descFr": "Boulettes d'aubergine, tomate fraîche, basilic",
-        "price": 14,
-        "type": "cibo",
-        "img": "🍆"
-      },
-      {
-        "name": "Tagliata di tonno",
-        "nameEn": "Seared Tuna",
-        "nameFr": "Thon saisi",
-        "desc": "Tonno fresco scottato, sesamo, rucola",
-        "descEn": "Fresh seared tuna, sesame, rocket",
-        "descFr": "Thon frais saisi, sésame, roquette",
-        "price": 26,
-        "type": "cibo",
-        "img": "🐟"
-      }
-    ],
-    "Contorni": [
-      {
-        "name": "Verdure grigliate",
-        "nameEn": "Grilled Vegetables",
-        "nameFr": "Légumes grillés",
-        "desc": "Zucchine, melanzane, peperoni",
-        "descEn": "Zucchini, eggplant, bell peppers",
-        "descFr": "Courgettes, aubergines, poivrons",
-        "price": 6,
-        "type": "cibo",
-        "img": "🥒"
-      },
-      {
-        "name": "Patate al forno",
-        "nameEn": "Roasted Potatoes",
-        "nameFr": "Pommes au four",
-        "desc": "Patate, rosmarino, aglio",
-        "descEn": "Potatoes, rosemary, garlic",
-        "descFr": "Pommes de terre, romarin, ail",
+        "name": "Chips di patate",
         "price": 5,
+        "desc": "Croccanti chips di patate",
         "type": "cibo",
-        "img": "🥔"
+        "img": "\ud83c\udf5f"
+      },
+      {
+        "name": "Fritto locale",
+        "price": 8,
+        "desc": "Polpette di carne, crocchette di patate e zucchine in pastella",
+        "type": "cibo",
+        "img": "\ud83c\udf73"
+      },
+      {
+        "name": "Sandwich estate",
+        "price": 8,
+        "desc": "Pane tostato con prosciutto crudo, mozzarella, insalata verde, pomodori e salsa rosa",
+        "type": "cibo",
+        "img": "\ud83e\udd6a"
+      },
+      {
+        "name": "Sandwich mare",
+        "price": 8,
+        "desc": "Pane tostato con salsa tonnata, insalata verde, pomodoro secco e cetriolo",
+        "type": "cibo",
+        "img": "\ud83e\udd6a"
       },
       {
         "name": "Insalata mista",
-        "nameEn": "Mixed Salad",
-        "nameFr": "Salade mixte",
-        "desc": "Lattuga, valeriana, pomodorini",
-        "descEn": "Lettuce, lamb's lettuce, cherry tomatoes",
-        "descFr": "Laitue, mâche, tomates cerises",
         "price": 5,
+        "desc": "Insalata verde con pomodori",
         "type": "cibo",
-        "img": "🥗"
+        "img": "\ud83e\udd57"
       }
     ],
-    "Dolci": [
+    "Primi Piatti": [
       {
-        "name": "Tiramisù classico",
-        "nameEn": "Classic Tiramisu",
-        "nameFr": "Tiramisu classique",
-        "desc": "Caffè, savoiardi, mascarpone",
-        "descEn": "Coffee, ladyfingers, mascarpone",
-        "descFr": "Café, biscuits à la cuillère, mascarpone",
-        "price": 6,
+        "name": "Maritati alla leccese",
+        "price": 14,
+        "desc": "Pasta fresca con salsa di pomodoro, polpettine di carne e cacioricotta",
         "type": "cibo",
-        "img": "🍰"
+        "img": "\ud83c\udf5d"
       },
       {
-        "name": "Panna cotta al caramello",
-        "nameEn": "Caramel Panna Cotta",
-        "nameFr": "Panna cotta au caramel",
-        "desc": "Panna cotta, caramello salato",
-        "descEn": "Panna cotta, salted caramel",
-        "descFr": "Panna cotta, caramel salé",
-        "price": 6,
+        "name": "Spaghetti alle cozze",
+        "price": 16,
+        "desc": "Pasta di semola, cozze locali, pepe rosa e lime",
         "type": "cibo",
-        "img": "🍮"
+        "img": "\ud83c\udf5d"
+      }
+    ],
+    "Secondi Piatti": [
+      {
+        "name": "Cotoletta con patatine",
+        "price": 12,
+        "desc": "Carne di maialino impanata e fritta con chips di patate",
+        "type": "cibo",
+        "img": "\ud83e\udd69"
       },
       {
-        "name": "Pasticciotto leccese",
-        "nameEn": "Lecce-Style Pasticciotto",
-        "nameFr": "Pasticciotto de Lecce",
-        "desc": "Pasticciotto caldo, crema pasticcera",
-        "descEn": "Warm pasticciotto, custard cream",
-        "descFr": "Pasticciotto chaud, crème pâtissière",
+        "name": "Bombette arrosto con cime di rapa",
+        "price": 16,
+        "desc": "Involtini di capocollo con cacioricotta e crema di cime di rapa",
+        "type": "cibo",
+        "img": "\ud83e\udd69"
+      },
+      {
+        "name": "Filetto di vitellino con funghi",
+        "price": 22,
+        "desc": "Medaglioni di vitellino, funghi cardoncelli e salsa al Negroamaro",
+        "type": "cibo",
+        "img": "\ud83e\udd69"
+      },
+      {
+        "name": "Fritto di mare",
+        "price": 18,
+        "desc": "Calamari e gamberi secondo disponibilit\u00e0",
+        "type": "cibo",
+        "img": "\ud83c\udf64"
+      }
+    ],
+    "Dessert": [
+      {
+        "name": "Frutta fresca",
         "price": 5,
+        "desc": "Frutta di stagione",
         "type": "cibo",
-        "img": "🥧"
+        "img": "\ud83c\udf4d"
       },
       {
-        "name": "Cheesecake ai frutti di bosco",
-        "nameEn": "Berry Cheesecake",
-        "nameFr": "Cheesecake aux baies",
-        "desc": "Base biscotto, frutti di bosco",
-        "descEn": "Biscuit base, mixed berries",
-        "descFr": "Base biscuitée, baies mélangées",
-        "price": 7,
+        "name": "Spumoncino",
+        "price": 6,
+        "desc": "Tortino di gelato artigianale in diversi gusti",
         "type": "cibo",
-        "img": "🍰"
+        "img": "\ud83c\udf66"
+      },
+      {
+        "name": "Dolce della casa",
+        "price": 6,
+        "desc": "Preparazione dello chef secondo disponibilit\u00e0",
+        "type": "cibo",
+        "img": "\ud83c\udf70"
       }
     ]
   },
