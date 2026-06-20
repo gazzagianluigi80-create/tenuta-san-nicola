@@ -735,8 +735,8 @@ function renderStaffOrders(container, activeOrders, staffRole) {
                     </div>
                     <div class="order-items">
                         <strong>🍽️ Cibo:</strong><br>
-                        ${foodItems.map(i => `${i.img} ${menuName(i)} x${i.qty} - €${(i.price * i.qty).toFixed(2)}`).join('<br>')}
-                        ${drinkItems.length > 0 ? `<br><small style="color:#999;">Il bar prepara: ${drinkItems.map(i => `${menuName(i)} x${i.qty}`).join(', ')}</small>` : ''}
+                        ${foodItems.map(i => `${i.img} ${i.name} x${i.qty} - €${(i.price * i.qty).toFixed(2)}`).join('<br>')}
+                        ${drinkItems.length > 0 ? `<br><small style="color:#999;">Il bar prepara: ${drinkItems.map(i => `${i.name} x${i.qty}`).join(', ')}</small>` : ''}
                     </div>
                     <div class="order-status">${statusHtml}</div>
                     <div>${actionHtml}</div>
@@ -778,8 +778,8 @@ function renderStaffOrders(container, activeOrders, staffRole) {
                     </div>
                     <div class="order-items">
                         <strong>🍺 Bevande:</strong><br>
-                        ${drinkItems.map(i => `${i.img} ${menuName(i)} x${i.qty} - €${(i.price * i.qty).toFixed(2)}`).join('<br>')}
-                        ${foodItems.length > 0 ? `<br><strong style="color:#D95A2B;">🍽️ Cibo da prendere in cucina:</strong><br>${foodItems.map(i => `${i.img} ${menuName(i)} x${i.qty}`).join('<br>')}` : ''}
+                        ${drinkItems.map(i => `${i.img} ${i.name} x${i.qty} - €${(i.price * i.qty).toFixed(2)}`).join('<br>')}
+                        ${foodItems.length > 0 ? `<br><strong style="color:#D95A2B;">🍽️ Cibo da prendere in cucina:</strong><br>${foodItems.map(i => `${i.img} ${i.name} x${i.qty}`).join('<br>')}` : ''}
                     </div>
                     <div class="order-status">${statusHtml}</div>
                     <div>${actionHtml}</div>
@@ -852,7 +852,7 @@ function renderReceptionDashboard() {
                         <span>${date.toLocaleTimeString('it-IT', {hour:'2-digit',minute:'2-digit'})}</span>
                     </div>
                     ${order.items.map(i => `<div style="display:flex;justify-content:space-between;padding:2px 0;">
-                        <span>${i.img} ${menuName(i)} x${i.qty}</span>
+                        <span>${i.img} ${i.name} x${i.qty}</span>
                         <span>\u20AC${(i.price * i.qty).toFixed(2)}</span>
                     </div>`).join('')}
                     <div style="text-align:right;font-weight:bold;border-top:1px solid #ddd;margin-top:4px;padding-top:4px;">
@@ -978,7 +978,7 @@ function showStaffHistory(role) {
 
     let html = '';
     deliveredOrders.reverse().forEach(order => {
-        const itemsList = order.items.map(i => `${i.img} ${menuName(i)} x${i.qty}`).join(', ');
+        const itemsList = order.items.map(i => `${i.img} ${i.name} x${i.qty}`).join(', ');
         const date = new Date(order.timestamp);
         html += `
             <div class="history-item">
@@ -1125,7 +1125,7 @@ function printOrdersPDF() {
                 const itemTotal = item.price * item.qty;
                 html += `<tr>
                     <td>${idx === 0 ? '#' + order.id.toUpperCase() : ''}</td>
-                    <td>${item.img} ${menuName(item)}</td>
+                    <td>${item.img} ${item.name}</td>
                     <td>${item.qty}</td>
                     <td>€${item.price.toFixed(2)}</td>
                     <td>€${itemTotal.toFixed(2)}</td>
