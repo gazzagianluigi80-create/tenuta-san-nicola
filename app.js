@@ -794,7 +794,21 @@ function markReady(orderId, statusKey) {
     const order = orders.find(o => o.id === orderId);
     if (order) {
         order.status[statusKey] = 'ready';
-        apiPut(`/api/orders/${orderId}`, { status: order.status });
+
+        const hasFood = order.status.cibo !== null;
+        const hasDrinks = order.status.bevanda !== null;
+
+        // Se l'ordine ha solo cibo o solo bevande, va direttamente in reception
+        if ((hasFood && !hasDrinks) || (!hasFood && hasDrinks)) {
+            order.delivered = true;
+            if (hasFood) order.status.cibo = 'delivered';
+            if (hasDrinks) order.status.bevanda = 'delivered';
+            apiPut(`/api/orders/${orderId}`, { delivered: true, status: order.status });
+            if (currentRole === 'reception') renderReceptionDashboard();
+        } else {
+            apiPut(`/api/orders/${orderId}`, { status: order.status });
+        }
+
         if (currentRole === 'bar') renderBarDashboard();
         if (currentRole === 'kitchen') renderKitchenDashboard();
         showToast(`\u2705 Ordine #${orderId.toUpperCase()} pronto`);
