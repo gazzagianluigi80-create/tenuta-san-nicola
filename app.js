@@ -634,6 +634,14 @@ async function submitOrder() {
     cart = [];
     saveData();
     updateCartIcon();
+
+    // Reset lingua a italiano dopo l'ordine
+    if (currentRoom) {
+        localStorage.removeItem(`tsn_lang_${currentRoom}`);
+    }
+    currentLang = 'it';
+    updateLangButtons();
+
     showScreen('guestScreen');
     renderMenu();
     showToast(`\u2705 #${order.id.toUpperCase()} ${t('ordine_inviato')}`);
