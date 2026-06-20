@@ -2,7 +2,7 @@
 let menu = { ristorante: {}, bar: {} };
 
 // ==================== LINGUA ====================
-let currentLang = localStorage.getItem('tsn_lang') || 'it';
+let currentLang = 'it';
 
 const LANG = {
   it: {
@@ -193,7 +193,9 @@ function updateLangButtons() {
 
 function setLang(lang) {
   currentLang = lang;
-  localStorage.setItem('tsn_lang', lang);
+  if (currentRoom) {
+    localStorage.setItem(`tsn_lang_${currentRoom}`, lang);
+  }
   updateLangButtons();
   const guestScreen = document.getElementById('guestScreen');
   if (guestScreen && guestScreen.classList.contains('active')) {
@@ -1044,9 +1046,12 @@ async function initApp() {
     renderRoomButtons();
 
     const langParam = getUrlParam('lang');
+    const roomParam = getUrlParam('room');
     if (langParam && ['it', 'en', 'es', 'fr'].includes(langParam)) {
         currentLang = langParam;
-        localStorage.setItem('tsn_lang', langParam);
+        if (roomParam) {
+            localStorage.setItem(`tsn_lang_${roomParam}`, langParam);
+        }
     }
     updateLangButtons();
 
@@ -1057,7 +1062,6 @@ async function initApp() {
 
     await refreshOrders();
 
-    const roomParam = getUrlParam('room');
     if (roomParam) {
         setRoom(parseInt(roomParam));
     } else {
@@ -1155,6 +1159,9 @@ setRoom = function(num) {
     localStorage.setItem('currentRoom', num);
     document.getElementById('roomBadge').textContent = `${getRoomName(num)}`;
     document.querySelector('.room-number').textContent = `${getRoomName(num)}`;
+    const savedLang = localStorage.getItem(`tsn_lang_${num}`);
+    currentLang = (savedLang && ['it', 'en', 'es', 'fr'].includes(savedLang)) ? savedLang : 'it';
+    updateLangButtons();
     loadCart();
     setRole('guest');
 };
