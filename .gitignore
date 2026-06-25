@@ -2,3 +2,5 @@ node_modules/
 orders.json
 bookings.json
 *.log
+stdout.txt
+stderr.txt

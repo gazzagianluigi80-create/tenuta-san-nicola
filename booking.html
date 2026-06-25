@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Prenotazioni - TENUTA SAN NICOLA</title>
     <link rel="stylesheet" href="style.css">
     <style>
@@ -81,8 +84,8 @@
     <div class="booking-container">
         <div class="booking-header">
             <a href="index.html">&larr; Torna all'app</a>
-            <h1>&#9971; Prenotazioni</h1>
-            <span></span>
+            <h1>&#9971; Prenotazioni <span style="font-size:0.6rem;color:#999;font-weight:normal;">v2</span></h1>
+            <span style="font-size:0.7rem;color:#2E5A3B;" id="debugSelectedCount">0 selezionati</span>
         </div>
         <p class="subtitle">Ombrelloni & Gazebo - Tenuta San Nicola</p>
 
@@ -163,7 +166,7 @@
 
         let bookings = [];
         let currentTab = 'ombrelloni';
-        let selectedSpot = null;
+        let selectedSpots = [];
 
         function getUrlParam(name) {
             const params = new URLSearchParams(window.location.search);
@@ -255,12 +258,12 @@
                     b.classList.add('active');
                 }
             });
-            selectedSpot = null;
+            selectedSpots = [];
             updateSelectedSpotInfo();
             renderSpots();
         }
 
-        function selectSpot(type, spotId) {
+        function toggleSpot(type, spotId) {
             const start = document.getElementById('filterStart').value;
             const end = document.getElementById('filterEnd').value;
             if (!start || !end) {
@@ -279,7 +282,14 @@
             if (r.status === 'partial') {
                 showToast(`Attenzione: ${r.free}/${r.total} giorni liberi, ${r.total - r.free} giorno/i già occupato/i`);
             }
-            selectedSpot = { type, spotId };
+
+            const idx = selectedSpots.findIndex(s => s.type === type && s.spotId === spotId);
+            if (idx !== -1) {
+                selectedSpots.splice(idx, 1);
+            } else {
+                selectedSpots.push({ type, spotId });
+            }
+
             document.getElementById('bookStart').value = start;
             document.getElementById('bookEnd').value = end;
             updateSelectedSpotInfo();
@@ -289,24 +299,32 @@
         function updateSelectedSpotInfo() {
             const info = document.getElementById('selectedSpotInfo');
             const btn = document.getElementById('btnBook');
-            if (!selectedSpot) {
-                const label = currentTab === 'ombrelloni' ? 'ombrellone' : 'gazebo';
-                info.innerHTML = `Seleziona un ${label} dalla griglia sopra`;
+            if (selectedSpots.length === 0) {
+                const label = currentTab === 'ombrelloni' ? 'ombrelloni' : 'gazebo';
+                info.innerHTML = `Seleziona uno o più ${label} dalla griglia sopra`;
                 btn.disabled = true;
                 document.getElementById('durationLabel').textContent = '';
+                const dbg = document.getElementById('debugSelectedCount');
+                if (dbg) dbg.textContent = '0 selezionati';
                 return;
             }
-            const list = SPOTS[selectedSpot.type];
-            const spot = list.find(s => s.id === selectedSpot.spotId);
             const start = document.getElementById('bookStart').value;
             const end = document.getElementById('bookEnd').value;
             const days = daysBetween(start, end);
             const durata = days === 1 ? '1 giorno' : `${days} giorni`;
-            if (spot) {
-                info.innerHTML = `Selezionato: <strong>${spot.icon} ${spot.name}</strong> — <strong>Giornata intera</strong>`;
-                btn.disabled = false;
-            }
-            document.getElementById('durationLabel').textContent = `📅 ${durata} — Giornata intera (8-18)`;
+
+            let names = selectedSpots.map(s => {
+                const list = SPOTS[s.type];
+                const spot = list.find(x => x.id === s.spotId);
+                return spot ? `${spot.icon} ${spot.name}` : `#${s.spotId}`;
+            });
+
+            info.innerHTML = `Selezionati: <strong>${names.join(', ')}</strong> — <strong>Giornata intera</strong>
+                <br><small style="color:#666;">Clicca per deselezionare</small>`;
+            btn.disabled = false;
+            document.getElementById('durationLabel').textContent = `📅 ${durata} — ${selectedSpots.length} posti selezionati — Giornata intera (8-18)`;
+            const dbg = document.getElementById('debugSelectedCount');
+            if (dbg) dbg.textContent = `${selectedSpots.length} selezionati`;
         }
 
         function renderSpots() {
@@ -318,7 +336,7 @@
             let html = '';
             list.forEach(spot => {
                 const r = getRangeStatus(start, end, currentTab, spot.id);
-                const isSelected = selectedSpot && selectedSpot.type === currentTab && selectedSpot.spotId === spot.id;
+                const isSelected = selectedSpots.some(s => s.type === currentTab && s.spotId === spot.id);
 
                 let statusLabel = 'Disponibile';
                 if (r.status === 'booked') statusLabel = 'Occupato';
@@ -328,8 +346,11 @@
                     ? `<div class="day-count">${r.free}/${r.total} giorni liberi</div>`
                     : '';
 
+                const checkMark = isSelected ? '<div style="position:absolute;top:4px;right:4px;background:#2E5A3B;color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;">✓</div>' : '';
+
                 html += `
-                    <div class="spot-card ${r.status} ${isSelected ? 'selected' : ''}" onclick="selectSpot('${currentTab}', ${spot.id})">
+                    <div class="spot-card ${r.status} ${isSelected ? 'selected' : ''}" data-type="${currentTab}" data-id="${spot.id}" style="position:relative;${r.status === 'booked' ? 'cursor:not-allowed;opacity:0.6;' : ''}">
+                        ${checkMark}
                         <div class="icon">${spot.icon}</div>
                         <div class="name">${spot.name}</div>
                         <div class="status">${statusLabel}</div>
@@ -339,6 +360,14 @@
             });
             container.innerHTML = html;
         }
+
+        document.getElementById('spotsContainer').addEventListener('click', function(e) {
+            const card = e.target.closest('.spot-card');
+            if (!card) return;
+            const type = card.dataset.type;
+            const id = parseInt(card.dataset.id);
+            if (type && id) toggleSpot(type, id);
+        });
 
         function renderResoconto() {
             const container = document.getElementById('resoconto');
@@ -379,7 +408,7 @@
                 const occupati = [];
 
                 list.forEach(spot => {
-                    const r = getRangeStatus(start, end, tipo, spot.id, slot);
+                    const r = getRangeStatus(start, end, tipo, spot.id);
                     const dettaglio = getSpotDetail(tipo, spot.id);
                     if (r.status === 'available') {
                         disponibili.push(spot.name);
@@ -406,7 +435,9 @@
         }
 
         async function checkAvailability() {
-            selectedSpot = null;
+            selectedSpots = [];
+            document.getElementById('bookStart').value = document.getElementById('filterStart').value;
+            document.getElementById('bookEnd').value = document.getElementById('filterEnd').value;
             updateSelectedSpotInfo();
             renderResoconto();
             renderSpots();
@@ -414,8 +445,8 @@
         }
 
         async function createBooking() {
-            if (!selectedSpot) {
-                showToast('Seleziona un posto disponibile');
+            if (selectedSpots.length === 0) {
+                showToast('Seleziona almeno un posto disponibile');
                 return;
             }
             const name = document.getElementById('clientName').value.trim();
@@ -430,44 +461,62 @@
             if (!start || !end) { showToast('Seleziona le date'); return; }
             if (start > end) { showToast('La data fine deve essere dopo la data inizio'); return; }
 
-            const dates = getDatesInRange(start, end);
-            for (const date of dates) {
-                if (isDayBooked(date, selectedSpot.type, selectedSpot.spotId)) {
-                    showToast(`Il ${formatDate(date)} è già prenotato. Scegli un altro periodo.`);
-                    return;
+            for (const sel of selectedSpots) {
+                const dates = getDatesInRange(start, end);
+                for (const date of dates) {
+                    if (isDayBooked(date, sel.type, sel.spotId)) {
+                        const list = SPOTS[sel.type];
+                        const spot = list.find(s => s.id === sel.spotId);
+                        showToast(`Il ${formatDate(date)} ${spot ? spot.name : '#' + sel.spotId} è già prenotato.`);
+                        return;
+                    }
                 }
             }
 
-            const result = await api('/api/bookings', {
-                method: 'POST',
-                body: JSON.stringify({
-                    type: selectedSpot.type,
-                    spot: selectedSpot.spotId,
-                    clientName: name,
-                    clientPhone: phone,
-                    startDate: start,
-                    endDate: end,
-                    slot: 'giornata_intera',
-                    sdraio: sdraio,
-                    persone: persone,
-                    bambini: bambini
-                })
-            });
+            let successCount = 0;
+            let failCount = 0;
 
-            if (result.success) {
+            for (const sel of selectedSpots) {
+                const result = await api('/api/bookings', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        type: sel.type,
+                        spot: sel.spotId,
+                        clientName: name,
+                        clientPhone: phone,
+                        startDate: start,
+                        endDate: end,
+                        slot: 'giornata_intera',
+                        sdraio: sdraio,
+                        persone: persone,
+                        bambini: bambini
+                    })
+                });
+
+                if (result.success) {
+                    successCount++;
+                } else {
+                    failCount++;
+                }
+            }
+
+            if (successCount > 0) {
                 const days = daysBetween(start, end);
                 const durata = days === 1 ? '1 giorno' : `${days} giorni`;
-                showToast(`&#9989; ${selectedSpot.type === 'ombrelloni' ? 'Ombrellone' : 'Gazebo'} ${selectedSpot.spotId} prenotato! ${durata} — Giornata intera`);
+                showToast(`✅ ${successCount} posto/i prenotato/i! ${durata} — Giornata intera`);
                 document.getElementById('clientName').value = '';
                 document.getElementById('clientPhone').value = '';
                 document.getElementById('bookSdraio').value = '';
                 document.getElementById('bookPersone').value = '1';
                 document.getElementById('bookBambini').value = 'no';
-                selectedSpot = null;
+                selectedSpots = [];
                 updateSelectedSpotInfo();
                 await loadBookings();
+                if (failCount > 0) {
+                    showToast(`⚠️ ${failCount} prenotazione/i non riuscita/e`);
+                }
             } else {
-                showToast('Errore: ' + (result.error || 'salvataggio fallito'));
+                showToast('Errore: nessuna prenotazione salvata');
             }
         }
 
@@ -540,7 +589,7 @@
                 if (validOmbrelloni || validGazebo) {
                     switchTab(typeParam);
                     setTimeout(() => {
-                        selectSpot(typeParam, spotId);
+                        toggleSpot(typeParam, spotId);
                         document.getElementById('bookingForm').scrollIntoView({ behavior: 'smooth' });
                     }, 300);
                 }
