@@ -91,9 +91,9 @@
 
         <div class="date-filters">
             <label>Dal:</label>
-            <input type="date" id="filterStart">
+            <input type="date" id="filterStart" required>
             <label>Al:</label>
-            <input type="date" id="filterEnd">
+            <input type="date" id="filterEnd" required>
             <button onclick="checkAvailability()" style="padding:8px 16px;background:#2E5A3B;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:bold;">Verifica disponibilità</button>
         </div>
 
@@ -185,21 +185,29 @@
             return d.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
         }
 
+        function toLocalDateStr(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
         function getDatesInRange(start, end) {
             const dates = [];
             let current = new Date(start + 'T00:00:00');
             const endDate = new Date(end + 'T00:00:00');
             while (current <= endDate) {
-                dates.push(current.toISOString().split('T')[0]);
+                dates.push(toLocalDateStr(current));
                 current.setDate(current.getDate() + 1);
             }
             return dates;
         }
 
         function daysBetween(start, end) {
+            if (!start || !end) return 0;
             const a = new Date(start + 'T00:00:00');
             const b = new Date(end + 'T00:00:00');
-            return Math.max(0, Math.floor((b - a) / 86400000) + 1);
+            return Math.max(0, Math.round((b - a) / 86400000) + 1);
         }
 
         async function api(url, opts = {}) {
@@ -570,14 +578,15 @@
         document.getElementById('filterStart').addEventListener('change', checkAvailability);
         document.getElementById('filterEnd').addEventListener('change', checkAvailability);
 
-        const today = new Date().toISOString().split('T')[0];
-        const weekLater = new Date();
-        weekLater.setDate(weekLater.getDate() + 6);
-        const weekLaterStr = weekLater.toISOString().split('T')[0];
-        document.getElementById('filterStart').value = today;
-        document.getElementById('filterEnd').value = weekLaterStr;
-        document.getElementById('bookStart').value = today;
-        document.getElementById('bookEnd').value = weekLaterStr;
+        const todayLocal = toLocalDateStr(new Date());
+        document.getElementById('filterStart').setAttribute('min', todayLocal);
+        document.getElementById('filterEnd').setAttribute('min', todayLocal);
+        document.getElementById('bookStart').setAttribute('min', todayLocal);
+        document.getElementById('bookEnd').setAttribute('min', todayLocal);
+        document.getElementById('filterStart').value = '';
+        document.getElementById('filterEnd').value = '';
+        document.getElementById('bookStart').value = '';
+        document.getElementById('bookEnd').value = '';
 
         loadBookings().then(() => {
             const typeParam = getUrlParam('type');
